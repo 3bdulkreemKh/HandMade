@@ -1,0 +1,85 @@
+﻿@model IEnumerable<HandMade.Models.Question>
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    ViewBag.Title = "الأسئلة والأجوبة";
+}
+
+<div>
+    <br />
+    <h4 style="text-align:center">
+        جميع الأسئلة والأجوبة
+    </h4>
+    <div>
+        @{
+            foreach (HandMade.Models.Question qst in Model)
+            {
+                <hr />
+
+                <div class="row">
+                    <div class="dialogbox col-md-9" style=" margin: 15px 0px;">
+
+                        <div style="transform:translateY(10px) translateX(-10px)">
+
+                            @qst.Account.FullName
+                        </div>
+                        <div class="body" style="background-color:mediumpurple;">
+                            <span class="tip tip-up"></span>
+                            <div class="message" style=" color:white; padding:10px">
+                                <span>@qst.Content</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3" style="border-left: 2px solid white; margin: 15px 0">
+                        <br />
+                        <br />
+                        <input type="button" class="btn btn-outline-success" style="transform:translateY(5px); margin:0 10px"
+                               value="أضف إجابة +"
+                               onclick="location.href='@Url.Action("AddAnswer", "Product", new { qustionId = qst.Id })'" />
+                    </div>
+                </div>
+
+                <div class="row" style="transform:translateY(-20px)">
+                    @foreach (var ans in qst.Answers)
+                    {
+                    <div class="dialogbox col-md-3" style="border-left: 2px solid white; margin: 15px 0">
+                        <div style="transform:translateY(10px) translateX(-10px)">
+
+                            @ans.Account.FullName
+                        </div>
+                        <div class="body">
+                            <span class="tip tip-up"></span>
+                            <div class="message" style="padding:10px">
+                                <span>@ans.Content</span>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </div>
+              
+            }
+
+            <div class="card" style="margin:20px 0;width:100%; border: none">
+                <div class="card-body" style="text-align:center; ">
+                    <div class="row justify-content-md-center" style="justify-content:left; padding: 0 20px;">
+                        @Html.PagedListPager((IPagedList)Model, page => Url.Action("Qustions", new { productId = Model.FirstOrDefault().ProductId, page }))
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin:20px 0;width:100%; border: none">
+                <div class="card-body" style="text-align:center; ">
+                    <div class="row justify-content-md-center" style="justify-content:left; padding: 0 20px;">
+                        <input type="button" class="btn btn-info"
+                               value="أسأل سؤالك"
+                               onclick="location.href='@Url.Action("AddQustion", "Product", new { productId = Model.FirstOrDefault().ProductId})'" />
+                    </div>
+                </div>
+            </div>
+
+
+        }
+    </div>
+
+</div>

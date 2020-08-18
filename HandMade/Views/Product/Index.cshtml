@@ -1,0 +1,503 @@
+﻿@model HandMade.Models.ViewModel.ProductList
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    ViewBag.Title = "قائمة المنتجات";
+}
+<div class="row">
+    @{
+        using (Html.BeginForm("Index", "Product",
+        null,
+        FormMethod.Post, new { @class = "form-horizontal", @style = "width:100%; padding:20px" }))
+        {
+            @Html.HiddenFor(m => m.ProductFilter.ByCheaper)
+            @Html.HiddenFor(m => m.ProductFilter.IsService)
+            if (Model.ProductFilter.ByCategories != null)
+            {
+
+                for (int i = 0; i < Model.ProductFilter.ByCategories.Count; i++)
+                {
+                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].Id);
+                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].CategoryName);
+
+                }
+            }
+            <div class="form-inline col12 row" style="margin:auto; text-align:center;">
+                @Html.EditorFor(m => m.ProductFilter.SearchString, new { htmlAttributes = new { @class = "form-control col-11", @placeholder = "قم بإدخال الكلمات الدلالية في هذه الخانة" } })
+
+                &nbsp; <button class="btn btn-default" type="submit" id="addressSearch">
+                    <img src="~/Content/imgs/search.png"
+                         style="max-height:25px"
+                         alt="ASP.NET" class="img-responsive" />
+                </button>
+            </div>
+
+        }
+    }
+</div>
+<hr />
+<br />
+<div class="row">
+
+    <div class="col-md-9">
+        @{
+            foreach (var product in Model.Products.Where(m => m.Stock > 0).ToList())
+            {
+                if (product.Stock < 10 && product.Stock > 2)
+                {
+                    <div class="announc" style="text-align:center">
+                        <p style="color:white; transform:translateY(5px)">أخر @product.Stock قطع</p>
+                    </div>
+                }
+                if (product.Stock == 2)
+                {
+                    <div class="announc" style="text-align:center">
+                        <p style="color:white; transform:translateY(5px)">أخر قطعتين</p>
+                    </div>
+                }
+                if (product.Stock == 1)
+                {
+                    <div class="announc" style="text-align:center">
+                        <p style="color:white; transform:translateY(5px)">أخر قطعة</p>
+                    </div>
+                }
+                <div class="containInCon2">
+
+                    <div class="row">
+                        <div class="col-8">
+                            <a class="dropdown-item" href="#" onclick="@("window.location.href='" + @Url.Action("Index", "Store", new { storeId = product.AccountId }) + "'");">
+                                @product.Account.FullName
+                            </a>
+                            <hr />
+                            <div style="min-height:85px;max-height:80px; overflow:hidden">
+                                <div class="row">
+                                    <div class="col-7">
+                                        @product.Name
+                                    </div>
+                                    <div class="col-5" style="justify-content:left">
+                                        @{
+
+                                            if (product.Reviews.Count > 0)
+                                            {
+                                                float total = 0;
+                                                float average = 5;
+                                                foreach (var rev in product.Reviews)
+                                                {
+                                                    total = total + rev.Rating;
+                                                }
+                                                average = total / product.Reviews.Count;
+
+                                                <div class="row" style="justify-content:left; padding: 0 20px;">
+                                                    <p style="transform:translateY(-3px)">(@product.Reviews.Count)</p> &nbsp;  &nbsp;
+
+                                                    @for (int i = 0; i < 5; i++)
+                                                    {
+
+                                                        if (average < 0)
+                                                        {
+                                                            <img src="~/Content/imgs/zeroStar.png"
+                                                                 style="max-height:20px"
+                                                                 alt="ASP.NET" class="img-responsive" />
+                                                        }
+                                                        else if (average < 0.51 && average > 0)
+                                                        {
+                                                            <img src="~/Content/imgs/halfStar.png"
+                                                                 style="max-height:20px"
+                                                                 alt="ASP.NET" class="img-responsive" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <img src="~/Content/imgs/fullStar.png"
+                                                                 style="max-height:20px"
+                                                                 alt="ASP.NET" class="img-responsive" />
+                                                        }
+
+                                                        average = average - 1;
+
+                                                    }
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="row" style="justify-content:left; padding: 0 20px;">
+                                                    <p style="transform:translateY(-3px)">(0)</p>&nbsp;  &nbsp;
+
+                                                    @for (int i = 0; i < 5; i++)
+                                                    {
+                                                        <img src="~/Content/imgs/noStar.png"
+                                                             style="max-height:20px"
+                                                             alt="ASP.NET" class="img-responsive" />
+                                                    }
+                                                </div>
+                                            }
+
+                                        }
+                                    </div>
+                                </div>
+                                <p style="color:gray;transform:translateY(-15px)">@product.SmallDisc</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    @{
+                                        if (product.DiscountPercentage != null && product.DiscountPercentage > 0)
+                                        {
+                                            double? discountedValue = product.DiscountPercentage * product.Price / 100;
+                                            double? newPrice = product.Price - discountedValue;
+                                            double? result = newPrice.HasValue
+                                               ? (double?)Math.Round(newPrice.Value, 2)
+                                               : null;
+                                            <div class="">
+                                                <div class="col row" style="transform:translateY(-7px) translateX(16.5px);position:relative">
+                                                    <span style="font-size:13px;transform:translateY(-13px);padding:0 15px; color: red; opacity:0.5"> سابقا </span> &nbsp;
+                                                    <div style="transform:translateY(-17px) translateX(15px);">
+                                                        <span class="strikeout" style="font-size:15px; color: red; opacity:0.5">@Math.Round(product.Price, 2)  ر.س</span>
+                                                    </div>
+                                                    <h3 style="transform:translateY(-19px)">&nbsp; @result ر.س</h3>
+                                                </div>
+                                                <div class="col" style="padding:0; transform:translateX(20px);">
+
+
+                                                </div>
+
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col row" style="transform:translateY(-7px) translateX(16.5px);position:relative">
+                                                <span style="font-size:13px;transform:translateY(-13px);padding:0 15px; color: white; opacity:0.5"> سابقا </span> &nbsp;
+                                                <div style="transform:translateY(-17px) translateX(15px);">
+                                                    <span style="font-size:15px; color: white; opacity:0.5">mmmmmر.س</span>
+                                                </div>
+                                                <h3 style="transform:translateY(-19px)">&nbsp; @Math.Round(product.Price, 2) ر.س</h3>
+                                            </div>
+
+                                        }
+                                    }
+
+                                </div>
+                                <div class="col-6" style="justify-content:left">
+                                    <div class="row" style="justify-content:left; padding: 0 10px;">
+                                        <input type="button" class="btn btn-outline-info"
+                                               value="تفاصيل أكثر"
+                                               onclick="location.href='@Url.Action("Details", "Product", new { productId = product.Id })'" />   &nbsp;
+                                        <input type="button" class="btn btn-success"
+                                               value="إظافة للسلة"
+                                               onclick="location.href='@Url.Action("AddToCart", "Product", new { productId = product.Id })'" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4" style="text-align:left">
+                            @{
+                                System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(HttpContext.Current.Server.MapPath("~/ProductPicture/" + product.Pictures.FirstOrDefault().Path));
+
+                                int iWidth = bitmap.Width;
+                                int iHeight = bitmap.Height;
+
+                                string maxSize = "max-height: 180px; width: auto";
+
+                                if (iWidth < iHeight) { maxSize = "max-width: 220px; height: auto;"; }
+                            }
+                            <i class="ProductListImg">
+                                <img src="~/ProductPicture/@product.Pictures.FirstOrDefault().Path"
+                                     style="@maxSize"
+                                     alt="ASP.NET" class="img-responsive" />
+                            </i>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            }
+        }
+    </div>
+    <div class="col-md-3">
+        <div class="containInCon2">
+            <p>تصفية النتائج</p>
+            <hr />
+            <p>حسب السعر</p>
+            <div class="row" style="padding: 0 10px;">
+                @{
+                    if (Model.ProductFilter.ByCheaper == "true")
+                    {
+                        using (Html.BeginForm())
+                        {
+                            @Html.HiddenFor(m => m.ProductFilter.ByCheaper, new { Value = "false" })
+                            @Html.HiddenFor(m => m.ProductFilter.IsService)
+                            @Html.HiddenFor(m => m.ProductFilter.SearchString)
+                            if (Model.ProductFilter.ByCategories != null)
+                            {
+
+                                for (int i = 0; i < Model.ProductFilter.ByCategories.Count; i++)
+                                {
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].Id);
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].CategoryName);
+
+                                }
+                            }
+                            <input type="submit" value="الأغلى" class="containInCon3" />
+                        }
+
+                        using (Html.BeginForm())
+                        {
+                            @Html.HiddenFor(m => m.ProductFilter.ByCheaper, new { Value = "" })
+                            @Html.HiddenFor(m => m.ProductFilter.IsService)
+                            @Html.HiddenFor(m => m.ProductFilter.SearchString)
+                            if (Model.ProductFilter.ByCategories != null)
+                            {
+                                for (int i = 0; i < Model.ProductFilter.ByCategories.Count; i++)
+                                {
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].Id);
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].CategoryName);
+
+                                }
+                            }
+
+                            <input type="submit" value="الأرخص" class="containInCon4" />
+                        }
+
+                    }
+                    else if (Model.ProductFilter.ByCheaper == "false")
+                    {
+                        using (Html.BeginForm())
+                        {
+                            @Html.HiddenFor(m => m.ProductFilter.ByCheaper, new { Value = "" })
+                            @Html.HiddenFor(m => m.ProductFilter.IsService)
+                            @Html.HiddenFor(m => m.ProductFilter.SearchString)
+                            if (Model.ProductFilter.ByCategories != null)
+                            {
+                                for (int i = 0; i < Model.ProductFilter.ByCategories.Count; i++)
+                                {
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].Id);
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].CategoryName);
+
+                                }
+                            }
+                            <input type="submit" value="الأغلى" class="containInCon4" />
+                        }
+
+                        using (Html.BeginForm())
+                        {
+                            @Html.HiddenFor(m => m.ProductFilter.ByCheaper, new { Value = "true" })
+                            @Html.HiddenFor(m => m.ProductFilter.IsService)
+                            @Html.HiddenFor(m => m.ProductFilter.SearchString)
+                            if (Model.ProductFilter.ByCategories != null)
+                            {
+                                for (int i = 0; i < Model.ProductFilter.ByCategories.Count; i++)
+                                {
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].Id);
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].CategoryName);
+
+                                }
+                            }
+                            <input type="submit" value="الأرخص" class="containInCon3" />
+                        }
+
+                    }
+                    else
+                    {
+                        using (Html.BeginForm())
+                        {
+                            @Html.HiddenFor(m => m.ProductFilter.ByCheaper, new { Value = "false" })
+                            @Html.HiddenFor(m => m.ProductFilter.IsService)
+                            @Html.HiddenFor(m => m.ProductFilter.SearchString)
+                            if (Model.ProductFilter.ByCategories != null)
+                            {
+                                for (int i = 0; i < Model.ProductFilter.ByCategories.Count; i++)
+                                {
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].Id);
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].CategoryName);
+
+                                }
+                            }
+                            <input type="submit" value="الأغلى" class="containInCon3" />
+                        }
+
+                        using (Html.BeginForm())
+                        {
+                            @Html.HiddenFor(m => m.ProductFilter.ByCheaper, new { Value = "true" })
+                            @Html.HiddenFor(m => m.ProductFilter.IsService)
+                            @Html.HiddenFor(m => m.ProductFilter.SearchString)
+                            if (Model.ProductFilter.ByCategories != null)
+                            {
+                                for (int i = 0; i < Model.ProductFilter.ByCategories.Count; i++)
+                                {
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].Id);
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].CategoryName);
+
+                                }
+                            }
+                            <input type="submit" value="الأرخص" class="containInCon3" />
+                        }
+                    }
+                }
+
+            </div>
+            <br />
+            <p>حسب النوع</p>
+            <div class="row" style="padding: 0 10px;">
+                @{
+                    if (Model.ProductFilter.IsService == "false")
+                    {
+                        using (Html.BeginForm())
+                        {
+                            @Html.HiddenFor(m => m.ProductFilter.ByCheaper)
+                            @Html.HiddenFor(m => m.ProductFilter.IsService, new { Value = "true" })
+                            @Html.HiddenFor(m => m.ProductFilter.SearchString)
+                            if (Model.ProductFilter.ByCategories != null)
+                            {
+                                for (int i = 0; i < Model.ProductFilter.ByCategories.Count; i++)
+                                {
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].Id);
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].CategoryName);
+
+                                }
+                            }
+                            <input type="submit" value="خدمات فقط" class="containInCon3" />
+
+                        }
+
+                        using (Html.BeginForm())
+                        {
+                            @Html.HiddenFor(m => m.ProductFilter.ByCheaper)
+                            @Html.HiddenFor(m => m.ProductFilter.IsService, new { Value = "" })
+                            @Html.HiddenFor(m => m.ProductFilter.SearchString)
+                            if (Model.ProductFilter.ByCategories != null)
+                            {
+                                for (int i = 0; i < Model.ProductFilter.ByCategories.Count; i++)
+                                {
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].Id);
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].CategoryName);
+
+                                }
+                            }
+                            <input type="submit" value="منتجات فقط" class="containInCon4" />
+                        }
+
+                    }
+                    else if (Model.ProductFilter.IsService == "true")
+                    {
+                        using (Html.BeginForm())
+                        {
+                            @Html.HiddenFor(m => m.ProductFilter.ByCheaper)
+                            @Html.HiddenFor(m => m.ProductFilter.IsService, new { Value = "" })
+                            @Html.HiddenFor(m => m.ProductFilter.SearchString)
+                            if (Model.ProductFilter.ByCategories != null)
+                            {
+                                for (int i = 0; i < Model.ProductFilter.ByCategories.Count; i++)
+                                {
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].Id);
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].CategoryName);
+
+                                }
+                            }
+                            <input type="submit" value="خدمات فقط" class="containInCon4" />
+
+                        }
+
+                        using (Html.BeginForm())
+                        {
+                            @Html.HiddenFor(m => m.ProductFilter.ByCheaper)
+                            @Html.HiddenFor(m => m.ProductFilter.IsService, new { Value = "false" })
+                            @Html.HiddenFor(m => m.ProductFilter.SearchString)
+                            if (Model.ProductFilter.ByCategories != null)
+                            {
+                                for (int i = 0; i < Model.ProductFilter.ByCategories.Count; i++)
+                                {
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].Id);
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].CategoryName);
+
+                                }
+                            }
+                            <input type="submit" value="منتجات فقط" class="containInCon3" />
+
+                        }
+                    }
+                    else
+                    {
+                        using (Html.BeginForm())
+                        {
+                            @Html.HiddenFor(m => m.ProductFilter.ByCheaper)
+                            @Html.HiddenFor(m => m.ProductFilter.IsService, new { Value = "true" })
+                            @Html.HiddenFor(m => m.ProductFilter.SearchString)
+                            if (Model.ProductFilter.ByCategories != null)
+                            {
+                                for (int i = 0; i < Model.ProductFilter.ByCategories.Count; i++)
+                                {
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].Id);
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].CategoryName);
+
+                                }
+                            }
+                            <input type="submit" value="خدمات فقط" class="containInCon3" />
+                        }
+
+                        using (Html.BeginForm())
+                        {
+                            @Html.HiddenFor(m => m.ProductFilter.ByCheaper)
+                            @Html.HiddenFor(m => m.ProductFilter.IsService, new { Value = "false" })
+                            @Html.HiddenFor(m => m.ProductFilter.SearchString)
+                            if (Model.ProductFilter.ByCategories != null)
+                            {
+                                for (int i = 0; i < Model.ProductFilter.ByCategories.Count; i++)
+                                {
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].Id);
+                                    @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].CategoryName);
+
+                                }
+                            }
+                            <input type="submit" value="منتجات فقط" class="containInCon3" />
+
+                        }
+                    }
+                }
+
+            </div>
+            <br />
+            <p>حسب الصنف</p>
+            @{
+                var context = new HandMade.Models.HandMadeContext();
+                var categories = context.Categories.ToList();
+                foreach (var cat in categories)
+                {
+                    string className = "containInCon3";
+                    if (Model.ProductFilter.ByCategories.Count > 0)
+                    {
+                        foreach (var catIn in Model.ProductFilter.ByCategories)
+                        {
+                            if (catIn.CategoryName == cat.CategoryName)
+                            {
+                                className = "containInCon4";
+                                break;
+                            }
+                        }
+                    }
+                    using (Html.BeginForm())
+                    {
+                        ICollection<HandMade.Models.Category> cats = Model.ProductFilter.ByCategories;
+                        @Html.HiddenFor(m => m.ProductFilter.ByCheaper)
+                        @Html.HiddenFor(m => m.ProductFilter.Category, new { Value = cat.CategoryName })
+                        @Html.HiddenFor(m => m.ProductFilter.IsService)
+                        @Html.HiddenFor(m => m.ProductFilter.SearchString)
+                        if (Model.ProductFilter.ByCategories != null)
+                        {
+                            for (int i = 0; i < Model.ProductFilter.ByCategories.Count; i++)
+                            {
+                                @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].Id);
+                                @Html.HiddenFor(x => x.ProductFilter.ByCategories[i].CategoryName);
+
+                            }
+                        }
+                        <input type="submit" value="@cat.CategoryName" class="@className" />
+                        <br />
+                    }
+                }
+            }
+
+            <br />
+        </div>
+    </div>
+
+    @*@Html.PagedListPager((IPagedList)Model.Products.AsEnumerable(), page => Url.Action("Index", new { page }))*@
+
+</div>

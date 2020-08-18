@@ -1,0 +1,89 @@
+﻿@model HandMade.Models.ViewModel.SignUp
+
+@{
+    ViewBag.Title = "تسجيل حساب جديد ";
+}
+
+    <div style="margin:auto;">
+        <div class="containe">
+            <br />
+            <div class="containInCon">
+                <h3 style="margin:10px 0;">تسجيل حساب جديد</h3>
+                <br />
+                <h6>قم بإدخال البيانات في الحقول لتسجيل حساب جديد</h6>
+                <hr />
+                @using (Html.BeginForm("SignUp", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="row" style="transform:translateY(5px)">
+                        <div class="col-4">نوع الحساب</div>
+                        <div class="col-3" style="">
+                            <p>
+                                @Html.RadioButtonFor(model => model.Role, "Buyer", new { @checked = "checked" })
+                                مشتري
+                            </p>
+                        </div>
+                        <div class="col-3">
+                            <p>
+                                @Html.RadioButtonFor(model => model.Role, "Seller")
+                                بائع
+                            </p>
+                        </div>
+                    </div>
+                    <div style="height:10px;"></div>
+                    <div style="transform:translateY(10px)"><p><span style="color:red">*&nbsp;</span>البريد الألكتروني</p></div>
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "البريد الإلكتروني" } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-error" })
+                    <div style="height:15px;"></div>
+                    <div style="transform:translateY(10px)"><p><span style="color:red">*&nbsp;</span>الإسم الشخصي (إسم المتجر في حال كنت بائع)</p></div>
+                    @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control", @placeholder = "(الإسم الشخصي (إسم المتجر في حال كنت بائع" } })
+                    @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-error" })
+                    <div style="height:15px;"></div>
+                    <div style="transform:translateY(10px)"><p><span style="color:red">*&nbsp;</span>رقم الجوال</p></div>
+                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "رقم الجوال" } })
+                    @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-error" })
+                    <div style="height:15px;"></div>
+                    <div style="transform:translateY(10px)"><p><span style="color:red">*&nbsp;</span> كلمة المرور</p></div>
+                    @Html.PasswordFor(model => model.Password, new { @class = "form-control", @placeholder = "كلمة المرور" })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-error" })
+                    <div style="height:15px;"></div>
+                    <hr />
+                    <label for="ImageFile" id="import" style="background:none; color:rebeccapurple" type="file">+ إظافة صورة شخصية</label>
+                    <br />
+                    <span id="selected_filename">لم يتم إختيار صورة للملف</span>
+                    <input id="browser" name="ImageFile" class="hideMe" type="file" />
+                    <hr />
+                    if (Model.Error != null)
+                    {
+                        <p style="color:red; font-size:12px;">@Model.Error</p>
+                    }
+                    <input type="submit" class="btn btnPrimaryOutline" value="تأكيد التسجيل" style="width:100%" />
+                }
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-6">
+                        <a style="font-size:14px" href="#">لديك حساب مسبق؟</a>
+                        <a href="#" onclick="@("window.location.href='" + @Url.Action("SignIn", "Account",null) + "'");">
+                            لديك حساب مسبق؟
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $("#import").click(function () {
+                    $("#browser").trigger("click");
+                    $('#browser').change(function () {
+                        $('#selected_filename').text($('#browser')[0].files[0].name);
+                    });
+                });
+            </script>
+        </div>
+
+        <br />
+        <br />
+    </div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

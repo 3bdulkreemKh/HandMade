@@ -1,0 +1,66 @@
+﻿@model HandMade.Models.Address
+@using HandMade.Models
+
+@{
+    ViewBag.Title = "معلومات العنوان";
+}
+
+<div style="margin:auto;">
+    <div class="containe">
+        <br />
+        <div class="containInCon" style="width:95%">
+            <h3 style="margin:10px 0;">أدخل معلومات العنوان</h3>
+            <br />
+            <hr />
+            @using (Html.BeginForm())
+            {
+                HandMadeContext context = new HandMadeContext();
+                ICollection<Region> regionList = context.Regions.Include("Cities").ToList();
+                ICollection<City> cityCategoryList = context.Cities.ToList();
+
+                <div style="height:10px;"></div>
+                <div><p><span style="color:red">*&nbsp;</span>العنوان</p></div>
+
+                @Html.DropDownListFor(model => model.Provice, new SelectList(regionList, "Id", "RegionName"), "المنطقة", new { @class = "form-control", @Id = "categoryDropDown" })
+                <div style="height:15px;"></div>
+                <div style="transform:translateY(10px)"><p><span style="color:red">*&nbsp;</span>المدينة</p></div>
+                @Html.DropDownListFor(model => model.City, new SelectList(cityCategoryList, "CityName", "CityName"), "المدينة", new { @class = "form-control", @Id = "subCategoryDropDown" })
+                @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-error" })
+                <script>
+                    $(function () {
+                        $("#categoryDropDown").on("change", function () {
+                            var categoryId = $(this).val();
+                            $("#subCategoryDropDown").empty();
+                            $("#subCategoryDropDown").append("<option value=''>إختار المدينة</option>");
+                            var urlVal = '@Url.Action("getRegion","Product", new { regionId = "-1"})';
+                            urlVal = urlVal.replace("-1", categoryId);
+
+                            $.ajax({
+                                url : urlVal,
+                                type: "GET",
+                                success: function (data) {
+                                    $.each(JSON.parse(data), function (i, item) {
+                                        $("#subCategoryDropDown").append($('<option></option>').attr('value', item.CityName).text(item.CityName));
+                                    });
+                                }
+                            });
+                        });
+                    });
+                </script>
+                <div style="height:15px;"></div>
+                <div style="transform:translateY(10px)"><p><span style="color:red">*&nbsp;</span>تفاصيل العنوان</p></div>
+                @Html.TextAreaFor(model => model.AddressDtails, new { @class = "form-control", @placeholder = "قيمة الشحن لداخل المدينة" })
+                <hr />
+
+                @Html.HiddenFor(m => m.AccountId)
+
+                <input type="submit" class="btn btnPrimaryOutline" value="حفظ" style="width:100%" />
+            }
+            <br />
+        </div>
+
+    </div>
+
+    <br />
+    <br />
+</div>

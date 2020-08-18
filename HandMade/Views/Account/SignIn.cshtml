@@ -1,0 +1,44 @@
+﻿@model HandMade.Models.ViewModel.SignIn
+
+@{
+    ViewBag.Title = "SignIn";
+}
+
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+<div style="margin:auto;">
+    <div class="containe">
+        <br />
+        <div class="containInCon">
+            <h3 style="margin:10px 0;">تسجيل الدخول</h3>  
+            <br/>
+            <h6>قم بإدخال البيانات في الحقول لتسجيل الدخول للنظام</h6>
+            <br/>
+            @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", @placeholder = "البريد الألكتروني" } })
+            @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-error" })
+            <div style="height:15px;"></div>
+            @Html.PasswordFor(model => model.Password, new { @class = "form-control", @placeholder = "كلمة المرور" })
+            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-error" })
+            <hr />
+            @if (Model.Error != null)
+            {
+                <p style="color:red; font-size:14px;">@Model.Error</p>
+            }
+            <input type="submit" class="btn btnPrimary" value="تسجيل الدخول" style="width:100%" />
+            <br />
+            <br />
+           
+        </div>
+    </div>
+
+    <br />
+    <br />
+</div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

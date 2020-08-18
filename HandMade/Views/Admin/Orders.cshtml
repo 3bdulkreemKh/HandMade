@@ -1,0 +1,89 @@
+﻿@model IEnumerable<HandMade.Models.Order>
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    ViewBag.Title = "MyOrders";
+}
+
+<div class="row">
+    <div class="col-6">
+        <h3>جميع الطلبات</h3>
+    </div>
+    <div class="col-6" style="text-align:left">
+        @{
+            using (Html.BeginForm())
+            {
+                <div class="form-inline col12 row" style="margin:auto; text-align:center;">
+                    <input type="text" class="form-control col" placeholder="قم بإدخال الكلمات الدلالية في هذه الخانة" name="search" />
+                    &nbsp; <button class="btn btn-default" type="submit" id="addressSearch">
+                        <img src="~/Content/imgs/search.png"
+                             style="max-height:25px"
+                             alt="ASP.NET" class="img-responsive" />
+                    </button>
+                </div>
+
+            }
+        }
+
+    </div>
+</div>
+
+<hr/>
+@{
+    if (Model.Count() > 0)
+    {
+        foreach (var order in Model)
+        {
+            <div class="containInCon" style="padding:20px">
+                <div class="row" style="transform:translateX(-25px)">
+                    <div class="col-6 row">
+                        <h3> #  @order.Number &nbsp;</h3>  <p style="background-color:lightseagreen; padding: 5px">@order.Status</p>
+                    </div>
+                    <div class="col-6" style="text-align:left">
+                        @order.OrderDate
+                    </div>
+                </div>
+                <hr />
+                <div class="row" style="transform:translateX(-25px)">
+                    <div class="col-8 row">
+                        <div style="transform:translateY(5px) translateX(-25px)" class="row">
+                            <p>
+                                مجموع الطلبات<h5>&nbsp; @order.ProductTotal</h5>&nbsp; &nbsp; &nbsp;الضريبة<h5>&nbsp; @order.VatTotal</h5>
+                                &nbsp;&nbsp; &nbsp; الشحن<h5>&nbsp; @order.ServiceTotal</h5>&nbsp; &nbsp; &nbsp; المجموع الكلي
+                            </p>
+                        </div>
+                        <h3 style="transform:translateX(-50px)"> @order.Total</h3>
+                    </div>
+                    <div class="col-4" style="text-align:left;">
+                        <p style="text-align:left">
+
+                            <input type="button" style="float:left" class="btnPrimaryOutline"
+                                   value="تفاصيل الطلب"
+                                   onclick="location.href='@Url.Action("OrderDetails", "Admin", new { id = order.Id })'" />
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+            <br />
+
+        }
+
+        <div class="card" style="margin:20px 0;width:100%; border: none">
+            <div class="card-body" style="text-align:center; ">
+                <div class="row justify-content-md-center" style="justify-content:left; padding: 0 20px;">
+                    @Html.PagedListPager((IPagedList)Model, page => Url.Action("Orders", new { page }))
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row" style="width:100%; text-align:center">
+            <h6>لا توجد طلبات</h6>
+        </div>
+
+
+    }
+}

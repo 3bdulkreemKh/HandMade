@@ -1,0 +1,65 @@
+﻿@model IEnumerable<HandMade.Models.Question>
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    ViewBag.Title = "الأسألة";
+}
+
+<div>
+    <br />
+    <h4 style="text-align:center">
+
+        أسألتي
+
+    </h4>
+    <hr />
+    <div class="row">
+
+        @{
+
+            if (Model.Count() > 0)
+            {
+                foreach (HandMade.Models.Question rat in Model)
+                {
+                    <div class="col-md-4">
+                        <div class="card" style="margin:20px 0">
+                            <div class="card-body" style="text-align:center">
+                                <h4 class="card-title">
+                                    <a href="#" onclick="@("window.location.href='" + @Url.Action("Details", "Product", new { productId = rat.ProductId }) + "'");">
+                                        @rat.Product.Name
+                                    </a>
+                                </h4>
+                                <b class="card-text">@rat.Content</b>
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+
+                }
+
+                <div class="card" style="margin:20px 0;width:100%; border: none">
+                    <div class="card-body" style="text-align:center; ">
+                        <div class="row justify-content-md-center" style="justify-content:left; padding: 0 20px;">
+                            @Html.PagedListPager((IPagedList)Model, page => Url.Action("Answers", new { page }))
+                        </div>
+                    </div>
+                </div>
+
+
+            }
+            else
+            {<div>
+                    <h6>لم تقم بإضافة أي سؤال</h6>
+
+                </div>
+            }
+
+
+
+        }
+    </div>
+
+</div>
+
+

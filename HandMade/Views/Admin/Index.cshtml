@@ -1,0 +1,162 @@
+﻿@model HandMade.Models.Account
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h3>صفحة الإشراف</h3>
+
+<hr />
+
+<div class="row">
+    <div class="col-6">
+        <div class="containInCon" style="padding: 10px; margin-top:10px; border-radius:5px">
+            <div class="row">
+                <div class="col-6">
+                    <h6 style="        transform: translateY(9px)
+">
+                        &nbsp;  جميع المنتجات
+                    </h6>
+                </div>
+                <div class="col-6">
+                    <p style="text-align:left; margin:0; padding:0">
+
+                        <input type="button" class="btn btn-outline-dark"
+                               value="الذهاب للقائمة"
+                               onclick="location.href='@Url.Action("Products", "Admin",null)'" />
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="containInCon" style="padding: 10px; border-radius:5px">
+            <div class="row">
+                <div class="col-6">
+                    <h6 style="transform:translateY(9px)">
+                        &nbsp;  جميع الطلبات
+                    </h6>
+                </div>
+                <div class="col-6">
+                    <p style="text-align:left; margin:0; padding:0">
+
+                        <input type="button" class="btn btn-outline-dark"
+                               value="الذهاب للقائمة"
+                               onclick="location.href='@Url.Action("Orders", "Admin",null)'" />
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="containInCon" style="padding:10px; margin-top:10px;  border-radius:5px">
+            <div class="row">
+                <div class="col-6">
+                    <h6 style="transform:translateY(9px)">
+                        &nbsp; جميع الحسابات
+                    </h6>
+                </div>
+                <div class="col-6">
+                    <p style="text-align:left; margin:0; padding:0">
+
+                        <input type="button" class="btn btn-outline-dark"
+                               value="الذهاب للقائمة"
+                               onclick="location.href='@Url.Action("Accounts", "Admin",null)'" />
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="containInCon" style="padding: 10px;margin-top:10px; border-radius:5px">
+            <div class="row">
+                <div class="col-6">
+                    <h6 style="transform:translateY(9px)">
+                        &nbsp;  جميع الأسألة
+                    </h6>
+                </div>
+                <div class="col-6">
+                    <p style="text-align:left; margin:0; padding:0">
+
+                        <input type="button" class="btn btn-outline-dark"
+                               value="الذهاب للقائمة"
+                               onclick="location.href='@Url.Action("Questions", "Admin",null)'" />
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="containInCon" style="padding: 10px; margin-top:10px; border-radius:5px">
+            <div class="row">
+                <div class="col-6">
+                    <h6 style="        transform: translateY(9px)
+">
+                        &nbsp;  جميع التقاييم
+                    </h6>
+                </div>
+                <div class="col-6">
+                    <p style="text-align:left; margin:0; padding:0">
+
+                        <input type="button" class="btn btn-outline-dark"
+                               value="الذهاب للقائمة"
+                               onclick="location.href='@Url.Action("Reviews", "Admin",null)'" />
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="containInCon" style="padding: 0px; border-radius:5px">
+
+            <div style="padding:30px 20px;">
+                <h6>
+                    البيانات الشخصية
+                </h6>
+
+                <hr />
+                <div class="row">
+                    <div class="col-auto">
+                        <img src="~/Content/imgs/user.png"
+                             style="max-height:25px"
+                             alt="ASP.NET" class="img-responsive" />
+                    </div>
+                    <div class="col">
+                        @Model.FullName
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-auto">
+                        <img src="~/Content/imgs/call.png"
+                             style="max-height:25px"
+                             alt="ASP.NET" class="img-responsive" />
+                    </div>
+                    <div class="col">
+                        @Model.PhoneNumber
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-auto">
+                        <img src="~/Content/imgs/mail.png"
+                             style="max-height:25px"
+                             alt="ASP.NET" class="img-responsive" />
+                    </div>
+                    <div class="col">
+                        @Model.Email
+                    </div>
+                </div>
+                <hr />
+                <p style="text-align:left; margin:0; padding:0">
+                    <input type="button" class="btn btn-outline-dark"
+                           value="تعديل كلمة المرور"
+                           onclick="location.href='@Url.Action("ChangePassword", "Account", new { productId = Model.Id })'" />
+                    &nbsp; &nbsp;
+                    <input type="button" class="btn btn-outline-dark"
+                           value="تعديل البيانات"
+                           onclick="location.href='@Url.Action("EditAccount", "Account", new { productId = Model.Id })'" />
+                </p>
+            </div>
+
+        </div>
+        <br />
+      
+    </div>
+
+</div>
+
+<br />

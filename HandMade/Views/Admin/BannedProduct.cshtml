@@ -1,0 +1,44 @@
+﻿@model HandMade.Models.BannedProducts
+
+@{
+    ViewBag.Title = "BannedProduct";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div style="margin:auto;">
+        <div class="containe">
+            <br />
+            <div class="containInCon">
+                <h3 style="margin:10px 0;">حظر المنتج</h3>
+                <br />
+                <h6>حظر المنتج</h6>
+                <br />
+                @Html.ActionLink(Model.Product.Name, "Index", "Store", new { storeId = Model.Product.AccountId })
+                <p>سبب الحظر</p>
+                @Html.TextAreaFor(model => model.Reason,  new { @class = "form-control", @placeholder = "سبب الحظر" })
+                <div style="height:15px;"></div>
+                @Html.HiddenFor(model => model.ProductId, new { @class = "form-control", @placeholder = "كلمة المرور" })
+                <hr />
+                <input type="button" class="btn btn-outline-dark" style="padding:5px; margin:5px;"
+                       value="الغاء"
+                       onclick="location.href='@Url.Action("Products", "Admin", null)'" />
+&nbsp;&nbsp;
+                <input type="submit" class="btn btnPrimary" value="تأكيد الحظر" />
+                <br />
+                <br />
+
+            </div>
+        </div>
+
+        <br />
+        <br />
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

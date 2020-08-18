@@ -1,0 +1,421 @@
+﻿@model HandMade.Models.ViewModel.Cart
+
+@{
+    ViewBag.Title = "سلة التسوق";
+    double? totalPrice = 0;
+}
+<h3>سلة التسوق</h3>
+<br />
+<hr />
+<br />
+
+@{
+    if (Model.ProductBySellers.Count() <= 0)
+    {
+        <div class="row">
+            <div class="col-12" style="text-align:center">
+                <h6>لا توجد منتجات في سلة التسوق</h6>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+
+            <div class="col-8">
+                @{int num2 = 1; }
+                @foreach (var itm in Model.ProductBySellers.Where(m => m.CanBeShipped == true))
+                {
+                    num2++;
+                    <div class="containInCon" style="border-radius:5px; padding: 15px; width: 100%; z-index:@num2 px">
+                        <div class="row">
+                            <div class="col-6">
+                                <a href="#" onclick="@("window.location.href='" + @Url.Action("Index", "Store", new { storeId = itm.Account.Id }) + "'");">
+                                    @itm.Account.FullName
+                                </a>
+                            </div>
+                            <div class="col-6" style="text-align:left">
+                                تكلفة الشحن الى @Model.Address.City :  @itm.ShippingCost ر.س
+                            </div>
+                        </div>
+                        <hr />
+                        @{int num = 0; }
+                        @foreach (var item in itm.Products)
+                        {
+                            num++;
+
+                            if (num > 1)
+                            {
+                                <hr />
+                            }
+
+                            <div class="row">
+                                <div>
+                                    <br />
+                                    <a href="#" onclick="@("window.location.href='" + @Url.Action("RemoveItem", "ShoppingCart", new { shoppingCartId = item.Id }) + "'");">
+                                        <i class='fa fa-trash' style="font-size:25px; transform:translateX(35px) translateY(10px); opacity:0.5;"></i>
+                                    </a>
+                                </div>
+
+                                <div class="row col-md-9" style="border-radius:5px; padding:10px">
+                                    @{
+                                        <div>
+                                            <div class="imgCorp" style="opacity: 1;width:70px; height: 70px;margin:0px;padding:0px;background-image:url(../../ProductPicture/@item.Product.Pictures.FirstOrDefault().Path);" onclick="myFunction(this)"></div>
+
+                                        </div>
+                                        <div class="" style="width: 250px;">
+                                            <br />
+                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                            <a href="#" onclick="@("window.location.href='" + @Url.Action("Details", "Product", new { productId = item.Product.Id }) + "'");">
+                                                @item.Product.Name
+                                            </a>
+
+                                        </div>
+                                        if (item.Product.DiscountPercentage != null && item.Product.DiscountPercentage > 0)
+                                        {
+                                            double? discountedValue = item.Product.DiscountPercentage * item.Product.Price / 100;
+                                            double? newPrice = item.Product.Price - discountedValue;
+                                            double? result44 = (newPrice.HasValue)
+                                               ? (double?)Math.Round(newPrice.Value, 2)
+                                               : null;
+                                            <div style="transform:translateY(5px)">
+                                                <div class="row" style="text-align:left">
+                                                    <span style="text-align:left;font-size:13px; transform:translateY(3px);padding:0 15px; color: red; opacity:0.5"> سابقا </span> &nbsp;
+
+                                                    <div style="transform: translateY(0px) translateX(15px);">
+                                                        <span class="strikeout" style="text-align:left;font-size:15px; color: red; opacity:0.5">@Math.Round(item.Product.Price, 2)  ر.س</span>
+                                                    </div>
+                                                </div>
+                                                <div style="transform: translateY(3px)">
+                                                    <h4>@result44 ر.س</h4>
+
+                                                </div>
+
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div style="transform: translateY(25px)">
+                                                <h4>@Math.Round(item.Product.Price, 2) ر.س</h4>
+
+                                            </div>
+                                        }
+                                    }
+                                    <div>
+
+                                    </div>
+                                </div>
+                                <div style="transform:translateX(35px)">
+                                    <input type="button" class="btn btn-outline-success" style="padding:1px; margin:5px; width: 25px; height:25px"
+                                           value="+"
+                                           onclick="location.href='@Url.Action("AddOne", "ShoppingCart", new { shoppingCartId = item.Id })'" />
+                                    <br />
+                                    <div style="margin:0;">
+                                        &nbsp;<b>X</b><b> @item.Qty</b>
+                                    </div>
+                                    <input type="button" class="btn btn-outline-danger" style="padding:1px; margin:5px;width: 25px; height:25px"
+                                           value="-"
+                                           onclick="location.href='@Url.Action("RemoveOne", "ShoppingCart", new { shoppingCartId = item.Id })'" />
+                                </div>
+                                <div style="transform:translateX(15px) translateY(16.5px)">
+                                    <h6>المجموع</h6>
+                                    @if (item.Product.DiscountPercentage != null && item.Product.DiscountPercentage > 0)
+                                    {
+                                        double? discountedValue = item.Product.DiscountPercentage * item.Product.Price / 100;
+                                        double? newPrice = item.Product.Price - discountedValue;
+                                        double? result0 = (newPrice.HasValue)
+                                           ? (double?)Math.Round(newPrice.Value, 2)
+                                           : null;
+                                        <div>
+                                            <h4>@Math.Round(newPrice.Value * item.Qty, 2) ر.س</h4>
+
+
+                                        </div>
+
+                                    }
+                                    else
+                                    {
+                                        <h4>@Math.Round(item.Product.Price * item.Qty, 2) ر.س</h4>
+                                    }
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+                    <br />
+
+                }
+                @{
+                    if (Model.ProductBySellers.Where(m => m.CanBeShipped == false).Count() > 0)
+                    {
+                        <br />
+                        <br />
+                        <br />
+                        <h6 style="color:red">لا يمكن شحن الطلبات التالية الى موقعك, الرجاء إختيار منتجات أخري</h6>
+                        <br />
+                    }
+
+                }
+                @foreach (var itm in Model.ProductBySellers.Where(m => m.CanBeShipped == false))
+                {
+                    num2++;
+                    <div class="containInCon" style="border-radius:5px; padding: 15px; width: 100%; border:2px solid red">
+                        <div class="row">
+                            <div class="col-6">
+                                @itm.Account.FullName
+                            </div>
+                            <div class="col-6" style="text-align:left; color:gray">
+                                لا يمكن أرسال الطلب الى  @Model.Address.City
+                            </div>
+                        </div>
+                        <hr />
+                        @{int num = 0; }
+                        @foreach (var item in itm.Products)
+                        {
+                            num++;
+
+                            if (num > 1)
+                            {
+                                <hr />
+                            }
+
+                            <div class="row">
+                                <div>
+                                    <br />
+                                    <a href="#" onclick="@("window.location.href='" + @Url.Action("RemoveItem", "ShoppingCart", new { shoppingCartId = item.Id }) + "'");">
+                                        <i class='fa fa-trash' style="font-size:25px; transform:translateX(35px) translateY(10px); opacity:0.5;"></i>
+                                    </a>
+                                </div>
+
+                                <div class="row col-md-9" style="border-radius:5px; padding:10px">
+                                    @{
+                                        <div>
+                                            <div class="imgCorp" style="opacity: 1;width:70px; height: 70px;margin:0px;padding:0px;background-image:url(../../ProductPicture/@item.Product.Pictures.FirstOrDefault().Path);" onclick="myFunction(this)"></div>
+
+                                        </div>
+                                        <div class="" style="width: 250px;">
+                                            <br />
+                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                            <a href="#" onclick="@("window.location.href='" + @Url.Action("Details", "Product", new { productId = item.Id}) + "'");">
+                                                @item.Product.Name
+                                            </a>
+
+                                        </div>
+                                        if (item.Product.DiscountPercentage != null && item.Product.DiscountPercentage > 0)
+                                        {
+                                            double? discountedValue = item.Product.DiscountPercentage * item.Product.Price / 100;
+                                            double? newPrice = item.Product.Price - discountedValue;
+                                            double? result44 = (newPrice.HasValue)
+                                               ? (double?)Math.Round(newPrice.Value, 2)
+                                               : null;
+                                            <div style="transform:translateY(5px)">
+                                                <div class="row" style="text-align:left">
+                                                    <span style="text-align:left;font-size:13px; transform:translateY(3px);padding:0 15px; color: red; opacity:0.5"> سابقا </span> &nbsp;
+
+                                                    <div style="transform: translateY(0px) translateX(15px);">
+                                                        <span class="strikeout" style="text-align:left;font-size:15px; color: red; opacity:0.5">@Math.Round(item.Product.Price, 2)  ر.س</span>
+                                                    </div>
+                                                </div>
+                                                <div style="transform: translateY(3px)">
+                                                    <h4>@result44 ر.س</h4>
+
+                                                </div>
+
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div style="transform: translateY(25px)">
+                                                <h4>@Math.Round(item.Product.Price, 2) ر.س</h4>
+
+                                            </div>
+                                        }
+                                    }
+                                    <div>
+
+                                    </div>
+                                </div>
+                                <div style="transform:translateX(35px)">
+                                    <input type="button" class="btn btn-outline-success" style="padding:1px; margin:5px; width: 25px; height:25px"
+                                           value="+"
+                                           onclick="location.href='@Url.Action("AddOne", "ShoppingCart", new { shoppingCartId = item.Id })'" />
+                                    <br />
+                                    <div style="margin:0;">
+                                        &nbsp;<b>X</b><b> @item.Qty</b>
+                                    </div>
+                                    <input type="button" class="btn btn-outline-danger" style="padding:1px; margin:5px;width: 25px; height:25px"
+                                           value="-"
+                                           onclick="location.href='@Url.Action("RemoveOne", "ShoppingCart", new { shoppingCartId = item.Id })'" />
+                                </div>
+                                <div style="transform:translateX(15px) translateY(16.5px)">
+                                    <h6>المجموع</h6>
+                                    @if (item.Product.DiscountPercentage != null && item.Product.DiscountPercentage > 0)
+                                    {
+                                        double? discountedValue = item.Product.DiscountPercentage * item.Product.Price / 100;
+                                        double? newPrice = item.Product.Price - discountedValue;
+                                        double? result0 = (newPrice.HasValue)
+                                           ? (double?)Math.Round(newPrice.Value, 2)
+                                           : null;
+                                        <div>
+                                            <h4>@Math.Round(newPrice.Value * item.Qty, 2) ر.س</h4>
+
+
+                                        </div>
+
+                                    }
+                                    else
+                                    {
+                                        <h4>@Math.Round(item.Product.Price * item.Qty, 2) ر.س</h4>
+                                    }
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+                    <br />
+
+                }
+
+            </div>
+
+            <div class="col-4">
+                <div class="containInCon" style="border-radius:5px; padding:15px; width: 100%">
+
+                    <h6>تفاصيل الطلب</h6>
+                    <hr />
+                    <div class="row">
+                        <div class="col-6">
+                            مجموع المنتجات
+                        </div>
+                        <div class="col-6" style="text-align:left">
+                            <b style="text-align:left">
+                                @{
+                                    double? result = null;
+                                    if (Model.ItemsTotal.HasValue)
+                                    {
+                                        result = Math.Round(Model.ItemsTotal.Value);
+                                    }
+                                    <b>@result ر.س</b>
+                                }
+                            </b>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            قيمة الشحن
+                        </div>
+                        <div class="col-6" style="text-align:left">
+                            <b style="text-align:left">
+                                @{
+                                    double result1 = 0;
+                                    if (Model.ShippingTotal.HasValue)
+                                    {
+                                        result1 = Math.Round(Model.ShippingTotal.Value, 2);
+                                    }
+                                    <b>@Math.Round(result1, 2) ر.س</b>
+                                }
+                            </b>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            الضريبة
+                        </div>
+                        <div class="col-6" style="text-align:left">
+                            <b style="text-align:left">
+                                @{
+                                    double result2 = 0;
+                                    if (Model.VATTotal.HasValue)
+                                    {
+                                        result2 = Math.Round(Model.VATTotal.Value, 2);
+                                    }
+                                    <b>@Math.Round(result2, 2) ر.س</b>
+                                }
+                            </b>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-6">
+                            المجموع الكلي
+                        </div>
+                        <div class="col-6" style="text-align:left">
+                            <b style="text-align:left">
+                                @{
+                                    double result3 = 0;
+                                    if (Model.Total.HasValue)
+                                    {
+                                        result3 = Math.Round(Model.Total.Value, 2);
+                                    }
+                                    <b>@Math.Round(result3, 2) ر.س</b>
+                                }
+                            </b>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <input type="button" class="btnPrimary" style="width:100%" data-toggle="modal" data-target="#exampleModalCenter"
+                       value="تأكيد الطلب" />
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">تأكيد الطلب</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <br />
+                            <div class="row">
+                                <div class="col-1">
+                                    <img src="~/Content/imgs/buy.png"
+                                         style="max-height:25px"
+                                         alt="ASP.NET" class="img-responsive" />
+                                </div>
+                                <div class="col">
+                                    الدفع عند الأستلام
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-1">
+                                    <img src="~/Content/imgs/box.png"
+                                         style="max-height:25px"
+                                         alt="ASP.NET" class="img-responsive" />
+                                </div>
+                                <div class="col">
+                                    في حال الطلب من أكثر من بائع سيتم تجهيز طلباتك منفصلة وكل بائع سيقوم بتجهيز الطلبات الخاصة به على حده
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-1">
+                                    <img src="~/Content/imgs/truck.png"
+                                         style="max-height:25px"
+                                         alt="ASP.NET" class="img-responsive" />
+                                </div>
+                                <div class="col">
+                                    سيتم تجهيزك بأرقام تتبع خاصة بكل طلب حال شحنها
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                        <div class="modal-footer" style="text-align:center">
+                            <button type="button" aria-label="Close" data-dismiss="modal" style="background:none; border: none">تراجع</button>
+                            <input type="button" class="btnPrimary" style="width:200px"
+                                   value="تأكيد"
+                                   onclick="location.href='@Url.Action("ConfirmOrder", "ShoppingCart")'" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+

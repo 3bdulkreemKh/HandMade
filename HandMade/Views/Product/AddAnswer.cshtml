@@ -1,0 +1,40 @@
+﻿@model HandMade.Models.Answer
+
+@{
+    ViewBag.Title = "أظافة جواب";
+}
+
+@using (Html.BeginForm())
+{
+    string qstContent = Model.Content;
+    Model.Content = null;
+    <div class='rating-stars text-center'>
+        <div class="row">
+            <div class="col-md-4">
+
+            </div>
+            <div class="col-md-4">
+                <h3>السؤال: @qstContent</h3>
+                <hr/>
+                <br />
+                <div class="containInCon">
+                    <h6>ضع جوابك عن السؤال</h6>
+
+                    @Html.HiddenFor(m => m.Id)
+                    @Html.HiddenFor(m => m.QuestionId)
+                    @Html.HiddenFor(m => m.AccountId)
+                    @Html.TextAreaFor(model => model.Content, new { @class = "form-control", @style = "min-height: 200px;", @placeholder = "إكتب جواب السؤال في هذه الخانة" })
+                    @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-error" })
+                    <br />
+                    <input type="submit" class="btn btnPrimary" value="إرسل الجواب" style="width:100%" />
+                </div>
+            </div>
+            <div class="col-md-4">
+
+            </div>
+        </div>
+
+
+    </div>
+}
+

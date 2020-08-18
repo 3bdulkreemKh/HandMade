@@ -1,0 +1,313 @@
+﻿@model HandMade.Models.Product
+
+@{
+    ViewBag.Title = Model.Name;
+}
+<hr />
+<div class="row">
+    <div class="col" style="max-width:420px;">
+        <div class="row" style="padding:10px; margin:15px; border: solid 1px gray">
+            @{
+                <div class="col" style="max-width:70px; margin: 0 30px 0 0">
+                    @foreach (var pic in Model.Pictures)
+                    {
+                        <div class="imgCorp" style="background-image:url(../../ProductPicture/@pic.Path);" onclick="myFunction(this)"></div>
+                    }
+                </div>
+                <div>
+                    <div class="mainImgCorp" id="mainFrame" style="background-image:url(../../ProductPicture/@Model.Pictures.FirstOrDefault().Path); transform:translateX(15px)"></div>
+                </div>
+
+            }
+            <script>
+                function myFunction(smallFrame) {
+                    var bigFrame = document.getElementById("mainFrame");
+                    bigFrame.style.backgroundImage = smallFrame.style.backgroundImage;
+                }
+            </script>
+        </div>
+    </div>
+    <div class="col">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-8">
+                    <h4 style="margin-top:10px;">@Model.Name</h4>
+                </div>
+                @{
+                    if (Model.Stock < 10 && Model.Stock > 2)
+                    {
+                        <div class="col-4" style="text-align:left">
+                            <p style="color:red; transform:translateY(5px)">أخر @Model.Stock قطع</p>
+                        </div>
+                    }
+                    if (Model.Stock == 2)
+                    {
+                        <div class="col-4" style="text-align:left">
+                            <p style="color:red; transform:translateY(5px)">أخر قطعتين</p>
+                        </div>
+                    }
+                    if (Model.Stock == 1)
+                    {
+                        <div class="col-4" style="text-align:left">
+                            <p style="color:red; transform:translateY(5px)">أخر قطعة</p>
+                        </div>
+                    }
+                }
+            </div>
+            
+            <hr />
+            <div>
+                <div class="row">
+                    <div class="col-7">
+                        @Model.SmallDisc
+                    </div>
+
+                </div>
+                <p style="color:gray; min-height: 230px">@Model.Discription</p>
+                <hr />
+                <div class="row">
+                    <a class="dropdown-item" href="#" onclick="@("window.location.href='" + @Url.Action("Index", "Store", new { storeId = Model.AccountId }) + "'");">
+                            @Model.Account.FullName
+                        </a>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-6">
+                    @{
+                        if (Model.DiscountPercentage != null && Model.DiscountPercentage > 0)
+                        {
+                            double? discountedValue = Model.DiscountPercentage * Model.Price / 100;
+                            double? newPrice = Model.Price - discountedValue;
+                            double? result = newPrice.HasValue
+                               ? (double?)Math.Round(newPrice.Value, 2)
+                               : null;
+                            <div class="row">
+                                <div class="col row">
+
+                                    <h3>&nbsp; @result ر.س</h3>
+                                    <span style="font-size:13px; transform:translateY(10px);padding:0 15px; color: red; opacity:0.5"> سابقا </span> &nbsp;
+                                    <div style="transform: translateY(7px) translateX(15px);">
+                                        <span class="strikeout" style="font-size:15px; color: red; opacity:0.5">@Math.Round(Model.Price, 2)  ر.س</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col row">
+                                <h3>&nbsp; @Math.Round(Model.Price, 2) ر.س</h3>
+                            </div>
+
+                        }
+                    }
+
+                </div>
+                <div class="col-6" style="justify-content:left">
+                    <div class="row" style="        justify-content: left;
+        padding: 0 10px;">
+
+                        <input type="button" class="btn btn-success"
+                               value="إظافة للسلة"
+                               onclick="location.href='@Url.Action("AddToCart", "Product", new { productId = Model.Id })'" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+<div>
+    <br />
+    <h4 style="text-align:center">
+        <img src="~/Content/imgs/fullStar.png"
+             style="max-height:20px"
+             alt="ASP.NET" class="img-responsive" />
+        اخر التقيمات
+        <img src="~/Content/imgs/fullStar.png"
+             style="max-height:20px"
+             alt="ASP.NET" class="img-responsive" />
+    </h4>
+    <div class="row">
+        @{
+            if (Model.Reviews.Count > 0)
+            {
+                foreach (var rat in Model.Reviews.Take(3))
+                {
+                    <div class="col-md-4">
+                        <div class="card" style="margin:20px 0">
+                            <div class="card-body" style="text-align:center">
+                                <h4 class="card-title">@rat.Account.FullName</h4>
+                                <p class="card-text">@rat.Content</p>
+                                @{
+
+                                    <div class="row justify-content-md-center" style="justify-content:left; padding: 0 20px;">
+                                        @for (int i = 0; i < 5; i++)
+                                        {
+                                            rat.Rating = rat.Rating - 1;
+                                            if (rat.Rating < 0)
+                                            {
+                                                <img src="~/Content/imgs/zeroStar.png"
+                                                     style="max-height:20px"
+                                                     alt="ASP.NET" class="img-responsive" />
+                                            }
+                                            else
+                                            {
+                                                <img src="~/Content/imgs/fullStar.png"
+                                                     style="max-height:20px"
+                                                     alt="ASP.NET" class="img-responsive" />
+                                            }
+
+
+                                        }
+                                    </div>
+
+
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            }
+            else
+            {
+  
+                <div class="card" style="margin:20px 0;width:100%; border: none">
+                    <div class="card-body" style="text-align:center; ">
+                        <div class="row justify-content-md-center" style="justify-content:left; padding: 0 20px;">
+                            <h6>لاتوجد تقيمات</h6>
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="card" style="margin:20px 0;width:100%; border: none">
+                <div class="card-body" style="text-align:center; ">
+                    <div class="row justify-content-md-center" style="justify-content:left; padding: 0 20px;">
+                        @if (Model.Reviews.Count > 3)
+                        {
+                            <input type="button" class="btn btn-outline-info"
+                                   value="جميع التقاييم"
+                                   onclick="location.href='@Url.Action("Reviews", "Product", new { productId = Model.Id })'" />
+                        }
+                        &nbsp;  &nbsp;  &nbsp;
+                        <input type="button" class="btn btn-info"
+                               value="ضع تقييمك"
+                               onclick="location.href='@Url.Action("AddReview", "Product", new { productId = Model.Id })'" />
+                    </div>
+                </div>
+            </div>
+
+
+        }
+    </div>
+
+</div>
+
+<hr />
+
+<div>
+    <br />
+    <h4 style="text-align:center">
+
+       اخر الأسئلة و الأجوبة
+
+    </h4>
+        @{
+            if (Model.Questions.Count > 0)
+            {
+                foreach (var qst in Model.Questions.Take(3))
+                {
+            <div class="row">
+                <div class="dialogbox col-md-3" style=" margin: 15px 0px;">
+
+                    <div style="transform:translateY(10px) translateX(-10px)">
+
+                        @qst.Account.FullName
+                    </div>
+                    <div class="body" style="background-color:mediumpurple;">
+                        <span class="tip tip-up"></span>
+                        <div class="message" style=" color:white; padding:10px">
+                            <span>@qst.Content</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1" style="border-left: 2px solid white; margin: 15px 0">
+                    <br />
+                    <br />
+
+                    <div class="body" style="background-color:mediumpurple;border-radius:50%; width: 50px; height:50px">
+                        <span class="tip tip-left" style="transform:scale(2)"></span>
+                        <div class="message" style=" color:white; padding:10px; font-size:21px">
+                            <div style="transform:translateX(-10px) translateY(-5px)">ج</div>
+                        </div>
+                    </div>
+                </div>
+                @foreach (var ans in qst.Answers.Take(2))
+                {
+                    <div class="dialogbox col-md-3" style="border-left: 2px solid white; margin: 15px 0">
+                        <div style="transform:translateY(10px) translateX(-10px)">
+
+                            @ans.Account.FullName
+                        </div>
+                        <div class="body">
+                            <span class="tip tip-up"></span>
+                            <div class="message" style="padding:10px">
+                                <span>@ans.Content</span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            <div class="col-md-1" style="border-left: 2px solid white; margin: 15px 0">
+                <br />
+                <br />
+                <input type="button" class="btn btn-outline-success" style="transform:translateY(5px); margin:0 10px"
+                       value="أضف إجابة +"
+                       onclick="location.href='@Url.Action("AddAnswer", "Product", new { qustionId = qst.Id })'" />
+            </div>
+            </div>
+                    
+
+
+
+                }
+            }
+            else
+            {
+
+                <div class="card" style="margin:20px 0;width:100%; border: none">
+                    <div class="card-body" style="text-align:center; ">
+                        <div class="row justify-content-md-center" style="justify-content:left; padding: 0 20px;">
+                            <h6>لا توجد أسألة</h6>
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="card" style="margin:20px 0;width:100%; border: none">
+                <div class="card-body" style="text-align:center; ">
+                    <div class="row justify-content-md-center" style="justify-content:left; padding: 0 20px;">
+                        @if (Model.Questions.Count > 3)
+                        {
+                            <input type="button" class="btn btn-outline-info"
+                                   value="جميع الأسألة"
+                                   onclick="location.href='@Url.Action("Qustions", "Product", new { productId = Model.Id })'" />
+                        }
+                        &nbsp; &nbsp; &nbsp;
+                        <input type="button" class="btn btn-info"
+                               value="أسأل سؤالك"
+                               onclick="location.href='@Url.Action("AddQustion", "Product", new { productId = Model.Id })'" />
+                    </div>
+                </div>
+            </div>
+
+
+        }
+    </div>
+

@@ -1,0 +1,72 @@
+﻿@model IEnumerable<HandMade.Models.Product>
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    ViewBag.Title = "منتجاتي";
+}
+
+<div class="row">
+    <div class="col-6">
+        <h3>منتجاتي</h3>
+    </div>
+    <div class="col-6" style="text-align:left">
+        <p>
+            <input type="button" class="btnPrimaryOutline"
+                   value="إظافة منتج جديد +"
+                   onclick="location.href='@Url.Action("AddProduct", "Store")'" />   &nbsp;
+        </p>
+    </div>
+</div>
+
+<hr />
+<div class="row">
+    @foreach (var item in Model)
+    {
+    <div class="col-4" style="margin: 0px">
+            <div class="card" style="">
+                <div  class="card-img-top">
+                    <div class="mainImgCorp"  style="height: 200px ; width: 100%;transform: translateX(-10px); background-image:url(../../ProductPicture/@item.Pictures.FirstOrDefault().Path);"></div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">@item.Name</h5>
+                    <p class="card-text">@item.SmallDisc</p>
+                    <hr />
+                    <div class="row">
+                        <div class="col-4">
+                            <p class="card-text" style="transform:translateY(5px)">
+                                @item.Price ر.س
+                            </p>
+                        </div>
+                        <div class="col-8" style="text-align:left">
+                            <input type="button" class="btnPrimaryOutline2" style="padding:5px 10px;"
+                                   value="تفاصيل"
+                                   onclick="location.href='@Url.Action("Details", "Product", new { productId = item.Id })'" ) />
+                            &nbsp; 
+                            <input type="button" class="btnPrimaryOutline" style="padding:5px 10px"
+                                   value="تعديل"
+                                   onclick="location.href='@Url.Action("EditProduct", "Store", new { productId = item.Id })'" ) />
+
+                        </div>
+                    </div>
+                   
+                   
+                </div>
+            </div>
+    </div>      
+    }
+</div>
+
+
+
+
+
+<hr />
+
+<div class="card" style="margin:20px 0;width:100%; border: none">
+    <div class="card-body" style="text-align:center; ">
+        <div class="row justify-content-md-center" style="justify-content:left; padding: 0 20px;">
+            @Html.PagedListPager((IPagedList)Model, page => Url.Action("MyProducts", new { page }))
+        </div>
+    </div>
+</div>

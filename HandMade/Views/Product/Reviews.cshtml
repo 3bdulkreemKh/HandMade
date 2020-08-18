@@ -1,0 +1,85 @@
+﻿@model IEnumerable<HandMade.Models.Review>
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    ViewBag.Title = "التقيمات";
+}
+
+<div>
+    <br />
+    <h4 style="text-align:center">
+        <img src="~/Content/imgs/fullStar.png"
+             style="max-height:20px"
+             alt="ASP.NET" class="img-responsive" />
+        التقيمات
+        <img src="~/Content/imgs/fullStar.png"
+             style="max-height:20px"
+             alt="ASP.NET" class="img-responsive" />
+    </h4>
+    <div class="row">
+        @{
+            foreach (HandMade.Models.Review rat in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card" style="margin:20px 0">
+                        <div class="card-body" style="text-align:center">
+                            <h4 class="card-title">@rat.Account.FullName</h4>
+                            <p class="card-text">@rat.Content</p>
+                            @{
+
+                                <div class="row justify-content-md-center" style="justify-content:left; padding: 0 20px;">
+                                    @for (int i = 0; i < 5; i++)
+                                    {
+                                        rat.Rating = rat.Rating - 1;
+                                        if (rat.Rating < 0)
+                                        {
+                                            <img src="~/Content/imgs/zeroStar.png"
+                                                 style="max-height:20px"
+                                                 alt="ASP.NET" class="img-responsive" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/Content/imgs/fullStar.png"
+                                                 style="max-height:20px"
+                                                 alt="ASP.NET" class="img-responsive" />
+                                        }
+
+
+                                    }
+                                </div>
+
+
+
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+            <div class="card" style="margin:20px 0;width:100%; border: none">
+                <div class="card-body" style="text-align:center; ">
+                    <div class="row justify-content-md-center" style="justify-content:left; padding: 0 20px;">
+                        @Html.PagedListPager((IPagedList)Model, page => Url.Action("Reviews", new { productId = Model.FirstOrDefault().ProductId, page }))
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin:20px 0;width:100%; border: none">
+                <div class="card-body" style="text-align:center; ">
+                    <div class="row justify-content-md-center" style="justify-content:left; padding: 0 20px;">
+                        <input type="button" class="btn btn-info"
+                               value="ضع تقييمك"
+                               onclick="location.href='@Url.Action("AddReview", "Product", new { productId = Model.FirstOrDefault().ProductId })'" />
+                    </div>
+                </div>
+            </div>
+
+
+        }
+    </div>
+
+</div>
+
+

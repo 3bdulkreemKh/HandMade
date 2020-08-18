@@ -1,0 +1,92 @@
+﻿@model IEnumerable<HandMade.Models.Account>
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    ViewBag.Title = "المستخدمين";
+}
+
+<div class="row">
+    <div class="col-6">
+        <h3>جميع المستخدمين</h3>
+    </div>
+    <div class="col-6" style="text-align:left">
+        @{
+            using (Html.BeginForm())
+            {
+                <div class="form-inline col12 row" style="margin:auto; text-align:center;">
+                    <input type="text" class="form-control col" placeholder="قم بإدخال الكلمات الدلالية في هذه الخانة" name="search" />
+                    &nbsp; <button class="btn btn-default" type="submit" id="addressSearch">
+                        <img src="~/Content/imgs/search.png"
+                             style="max-height:25px"
+                             alt="ASP.NET" class="img-responsive" />
+                    </button>
+                </div>
+
+            }
+        }
+
+    </div>
+</div>
+
+<hr />
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-4" style="margin: 10px 0">
+            <div class="card" style="">
+                <div class="card-img-top">
+                    <div class="mainImgCorp" style="height: 200px ; width: 100%;transform: translateX(-10px); background-image:url(../../ProfilePicture/@item.ImagePath);"></div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">@item.UserName</h5>
+                    <p class="card-text">الإسم: @item.FullName</p>
+                    <p class="card-text">البريد: @item.Email</p>
+                    <p class="card-text">الإسم: @item.FullName</p>
+                    <p class="card-text">الإسم: @item.FullName</p>
+                    <hr />
+                    <div class="row">
+                        <div class="col-4">
+                            <p class="card-text" style="transform:translateY(5px)">
+                            </p>
+                        </div>
+                        <div class="col-8" style="text-align:left">
+                           
+                            &nbsp;
+                            @if (item.BannedAccounts.Count() > 0)
+                            {
+                                <input type="button" class="btnPrimaryOutlineRed" style="padding:5px 10px"
+                                       value="إزالة الحظر"
+                                       onclick="location.href='@Url.Action("UnBannedAccount", "Admin", new { accountId = item.Id })'" ) />
+                            }
+                            else
+                            {
+                                <input type="button" class="btnPrimaryOutlineRed" style="padding:5px 10px"
+                                       value="حظر المستخدم"
+                                       onclick="location.href='@Url.Action("BannedAccount", "Admin", new { accountId = item.Id })'" ) />
+                            }
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+
+
+<hr />
+
+<div class="card" style="margin:20px 0;width:100%; border: none">
+    <div class="card-body" style="text-align:center; ">
+        <div class="row justify-content-md-center" style="justify-content:left; padding: 0 20px;">
+            @Html.PagedListPager((IPagedList)Model, page => Url.Action("Accounts", new { page }))
+        </div>
+    </div>
+</div>

@@ -1,0 +1,387 @@
+﻿:root {
+    --main-bg-color: linear-gradient(90deg, rgba(190,100,219,1) 0%, rgba(100,126,219,1) 35%, rgba(100,126,219,1) 100%);
+}
+
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+
+h3 {
+    color: mediumpurple !important;
+}
+
+h6 {
+    color: rebeccapurple;
+}
+
+
+.text-error {
+    color: red;
+    font-size: 12px;
+}
+
+.btnPrimary {
+    background-color: none;
+    background: var(--main-bg-color);
+    border-width: 0px;
+    border-radius: 20px;
+    padding: 10px 15px;
+    color: white;
+    -webkit-box-shadow: -11px 10px 53px -18px rgba(0,0,0,0.75);
+    -moz-box-shadow: -11px 10px 53px -18px rgba(0,0,0,0.75);
+    box-shadow: -11px 10px 53px -18px rgba(0,0,0,0.75);
+    opacity: 0.8;
+}
+
+    .btnPrimary:hover {
+        color: white;
+        opacity:1;
+    }
+
+.btnPrimaryOutline {
+    background-color: none;
+    border: solid mediumpurple;
+    border-width: 2px;
+    border-radius: 20px;
+    padding: 10px 15px;
+    color: rebeccapurple;
+    -webkit-box-shadow: -11px 10px 53px -18px rgba(0,0,0,0.75);
+    -moz-box-shadow: -11px 10px 53px -18px rgba(0,0,0,0.75);
+    box-shadow: -11px 10px 53px -18px rgba(0,0,0,0.75);
+    opacity: 0.8;
+}
+
+    .btnPrimaryOutline:hover {
+        color: white;
+        background-color: mediumpurple;
+        opacity: 1;
+    }
+
+.btnPrimaryOutlineRed {
+    background-color: none;
+    border: solid coral;
+    border-width: 2px;
+    border-radius: 20px;
+    padding: 10px 15px;
+    color: coral;
+    -webkit-box-shadow: -11px 10px 53px -18px rgba(0,0,0,0.75);
+    -moz-box-shadow: -11px 10px 53px -18px rgba(0,0,0,0.75);
+    box-shadow: -11px 10px 53px -18px rgba(0,0,0,0.75);
+    opacity: 0.8;
+}
+
+    .btnPrimaryOutlineRed:hover {
+        color: white;
+        background-color: coral;
+        opacity: 1;
+    }
+
+.btnPrimaryOutline3 {
+    background-color: none;
+    border: solid forestgreen;
+    border-width: 2px;
+    border-radius: 20px;
+    padding: 10px 15px;
+    color: forestgreen;
+    -webkit-box-shadow: -11px 10px 53px -18px rgba(0,0,0,0.75);
+    -moz-box-shadow: -11px 10px 53px -18px rgba(0,0,0,0.75);
+    box-shadow: -11px 10px 53px -18px rgba(0,0,0,0.75);
+    opacity: 0.8;
+}
+
+    .btnPrimaryOutline3:hover {
+        color: white;
+        background-color: forestgreen;
+        opacity: 1;
+    }
+.btnPrimaryOutline2 {
+    background-color: none;
+    border: solid slategrey;
+    border-width: 2px;
+    border-radius: 20px;
+    padding: 10px 15px;
+    color: slategrey;
+    -webkit-box-shadow: -11px 10px 53px -18px rgba(0,0,0,0.75);
+    -moz-box-shadow: -11px 10px 53px -18px rgba(0,0,0,0.75);
+    box-shadow: -11px 10px 53px -18px rgba(0,0,0,0.75);
+    opacity: 0.8;
+}
+
+    .btnPrimaryOutline2:hover {
+        color: white;
+        background-color: slategrey;
+        opacity: 1;
+    }
+
+.containe {
+    width: 100%;
+    padding: 0 30%;
+}
+
+.containInCon {
+    padding: 40px ;
+    border-radius:20px;
+    -webkit-box-shadow: -11px 10px 53px -18px rgba(0,0,0,0.75);
+    -moz-box-shadow: -11px 10px 53px -18px rgba(0,0,0,0.75);
+    box-shadow: -11px 10px 53px -18px rgba(0,0,0,0.75);
+}
+
+.containInCon2 {
+    padding: 20px 20px 0px 30px;
+    border-radius: 5px;
+    -webkit-box-shadow: -11px 10px 40px -18px rgba(0,0,0,0.75);
+    -moz-box-shadow: -11px 10px 40px -18px rgba(0,0,0,0.75);
+    box-shadow: -11px 10px 40px -18px rgba(0,0,0,0.75);
+}
+
+.containInCon3 {
+    background-color: white;
+    margin: 0 0px 10px 10px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid lightgray;
+    -webkit-box-shadow: -11px 10px 40px -18px rgba(0,0,0,0.75);
+    -moz-box-shadow: -11px 10px 40px -18px rgba(0,0,0,0.75);
+    box-shadow: -11px 10px 40px -18px rgba(0,0,0,0.75);
+    text-decoration: none;
+    color: black;
+}
+
+.containInCon4 {
+    background-color: aliceblue;
+    margin: 0 0px 10px 10px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 2px solid cornflowerblue;
+    -webkit-box-shadow: -11px 10px 40px -18px rgba(0,0,0,0.75);
+    -moz-box-shadow: -11px 10px 40px -18px rgba(0,0,0,0.75);
+    box-shadow: -11px 10px 40px -18px rgba(0,0,0,0.75);
+    text-decoration: none;
+    color: black;
+}
+
+@media (max-width: 1070px) {
+    .containe {
+        width: 100%;
+        padding: 0 5%;
+    }
+}
+
+#import {
+    margin:0 0 -10px 0;
+    cursor: pointer;
+
+}
+
+.hideMe {
+    display: none;
+}
+
+
+
+.circleImg {
+    background: white;
+    border-radius: 50%;
+    border: 2px solid purple;
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    overflow:hidden;
+    padding:0;
+    display: inline-block;
+}
+
+.ProductListImg {
+    background: white;
+    border: 0px solid gray;
+    width: 220px;
+    height: 180px;
+    text-align: center;
+    overflow: hidden;
+    padding: 0;
+    display: inline-block;
+}
+
+.ProductListImg2 {
+    background: white;
+    border: 0px solid gray;
+    width: 420px;
+    height: 580px;
+    text-align: center;
+    overflow: hidden;
+    padding: 0;
+    display: inline-block;
+}
+
+.imgCorp {
+    margin:10px;
+    float: left;
+    width: 60px;
+    height: 60px;
+    background-size: cover;
+    opacity: 0.6;
+}
+
+.imgCorp:hover {
+    cursor:pointer;
+    opacity: 1;
+}
+
+.mainImgCorp {
+    margin: 10px;
+    float: left;
+    width: 300px;
+    height: 450px;
+    background-size: cover;
+}
+
+.strikeout {
+    font-size: 4em;
+    line-height: 1em;
+    position: relative;
+}
+
+    .strikeout::after {
+        border-bottom: 0.125em solid red;
+        content: "";
+        left: 0;
+        margin-top: calc(0.125em / 2 * -1);
+        position: absolute;
+        right: 0;
+        top: 55%;
+    }
+
+.rating-stars ul {
+    list-style-type: none;
+    padding: 0;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+    .rating-stars ul > li.star {
+        display: inline-block;
+    }
+
+        /* Idle State of the stars */
+        .rating-stars ul > li.star > i.fa {
+            font-size: 2.5em; /* Change the size of the stars */
+            color: #ccc; /* Color on idle state */
+        }
+
+        /* Hover state of the stars */
+        .rating-stars ul > li.star.hover > i.fa {
+            color: #FFCC36;
+        }
+
+        /* Selected state of the stars */
+        .rating-stars ul > li.star.selected > i.fa {
+            color: #FF912C;
+        }
+
+.tip {
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    background: transparent;
+    border: 10px solid mediumpurple;
+}
+
+.tip-up {
+    top: -20px; /* Same as body margin top + border */
+    right: 10px;
+    border-right-color: transparent;
+    border-left-color: transparent;
+    border-top-color: transparent;
+}
+
+.tip-down {
+    bottom: -25px;
+    left: 10px;
+    border-right-color: transparent;
+    border-left-color: transparent;
+    border-bottom-color: transparent;
+}
+
+.tip-left {
+    top: 63px;
+    left: 7.5px;
+    border-top-color: transparent;
+    border-left-color: transparent;
+    border-bottom-color: transparent;
+}
+
+.tip-right {
+    top: 10px;
+    right: -25px;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+}
+
+.dialogbox .body {
+    position: relative;
+    height: auto;
+    margin: 20px 10px;
+    padding: 5px;
+    border-radius: 10px;
+    border: 2px solid mediumpurple;
+}
+
+.body .message {
+    min-height: 30px;
+    border-radius: 3px;
+    font-family: Arial;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #797979;
+}
+
+.announc {
+    border-bottom: 40px solid red;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    height: 0;
+    width: 200px;
+    position:absolute;
+    left:0px;
+    transform: rotate(-45deg) translateX(-45px) translateY(5px);
+    z-index: 2
+}
+
+.noneA {
+    text-decoration:none;
+    color:black;
+
+}
+
+.noneA:hover {
+    text-decoration:none;
+    cursor:pointer;
+    color:black;
+}
+
+.chatPlace {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    width: 420px;
+    background-color:transparent;
+    text-align: center;
+}

@@ -1,0 +1,189 @@
+﻿@model HandMade.Models.Account
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<br/>
+
+<div class="row">
+    <div class="col-6">
+        <div class="containInCon" style="padding: 10px; border-radius:5px">
+            <div>
+                <div style="width:100%; height: 290px; background-image:url(../../ProfilePicture/@Model.ImagePath);"></div>
+            </div>
+        </div>
+        <br />
+        <div class="containInCon" style="padding: 10px; border-radius:5px">
+            <div class="row">
+                <div class="col-6">
+                    <h6 style="transform:translateY(9px)">
+                        &nbsp;  الطلبات الخاصة بي
+                    </h6>
+                </div>
+                <div class="col-6">
+                    <p style="text-align:left; margin:0; padding:0">
+
+                        <input type="button" class="btn btn-outline-dark"
+                               value="الذهاب للقائمة"
+                               onclick="location.href='@Url.Action("MyOrders", "Account",null)'" />
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="containInCon" style="padding:10px; margin-top:10px;  border-radius:5px">
+            <div class="row">
+                <div class="col-6">
+                    <h6 style="transform:translateY(9px)">
+                        &nbsp; تقيماتي
+                    </h6>
+                </div>
+                <div class="col-6">
+                    <p style="text-align:left; margin:0; padding:0">
+
+                        <input type="button" class="btn btn-outline-dark"
+                               value="الذهاب للقائمة"
+                               onclick="location.href='@Url.Action("Reviews", "Account",null)'" />
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="containInCon" style="padding: 10px;margin-top:10px; border-radius:5px">
+            <div class="row">
+                <div class="col-6">
+                    <h6 style="transform:translateY(9px)">
+                        &nbsp;  إسألتي
+                    </h6>
+                </div>
+                <div class="col-6">
+                    <p style="text-align:left; margin:0; padding:0">
+
+                        <input type="button" class="btn btn-outline-dark"
+                               value="الذهاب للقائمة"
+                               onclick="location.href='@Url.Action("Qustions", "Account",null)'" />
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="containInCon" style="padding: 10px; margin-top:10px; border-radius:5px">
+            <div class="row">
+                <div class="col-6">
+                    <h6 style="        transform: translateY(9px)
+">
+                        &nbsp;  أجوبتي
+                    </h6>
+                </div>
+                <div class="col-6">
+                    <p style="text-align:left; margin:0; padding:0">
+
+                        <input type="button" class="btn btn-outline-dark"
+                               value="الذهاب للقائمة"
+                               onclick="location.href='@Url.Action("Answers", "Account",null)'" />
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="containInCon" style="padding: 0px; border-radius:5px">
+           
+            <div style="padding:30px 20px;">
+                <h6>
+                    البيانات الشخصية
+                </h6>
+
+                <hr />
+                <div class="row">
+                    <div class="col-auto">
+                        <img src="~/Content/imgs/user.png"
+                             style="max-height:25px"
+                             alt="ASP.NET" class="img-responsive" />
+                    </div>
+                    <div class="col">
+                        @Model.FullName
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-auto">
+                        <img src="~/Content/imgs/call.png"
+                             style="max-height:25px"
+                             alt="ASP.NET" class="img-responsive" />
+                    </div>
+                    <div class="col">
+                        @Model.PhoneNumber
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-auto">
+                        <img src="~/Content/imgs/mail.png"
+                             style="max-height:25px"
+                             alt="ASP.NET" class="img-responsive" />
+                    </div>
+                    <div class="col">
+                        @Model.Email
+                    </div>
+                </div>
+                <hr />
+                <p style="text-align:left; margin:0; padding:0">
+                    <input type="button" class="btn btn-outline-dark"
+                           value="تعديل كلمة المرور"
+                           onclick="location.href='@Url.Action("ChangePassword", "Account", new { productId = Model.Id })'" />
+                    &nbsp; &nbsp;
+                    <input type="button" class="btn btn-outline-dark"
+                           value="تعديل البيانات"
+                           onclick="location.href='@Url.Action("EditAccount", "Account", new { productId = Model.Id })'" />
+                </p>
+            </div>
+
+        </div>
+        <br />
+        <div class="containInCon" style="        padding: 0px;
+        border-radius: 5px
+">
+            <div style="padding:30px 20px;">
+
+
+                <h6>
+                    بيانات العنوان
+                </h6>
+
+                <hr />
+                <div class="row">
+
+                    <div class="col">
+                        المنطقة: &nbsp;
+                        @Model.Addresses.FirstOrDefault().Provice
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col">
+                        المدينة:  &nbsp;
+                        @Model.Addresses.FirstOrDefault().City
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col">
+                        تفاصيل العنوان: <br />
+                        @Model.Addresses.FirstOrDefault().AddressDtails
+                    </div>
+                </div>
+                <hr />
+                <p style="text-align:left; margin:0; padding:0">
+                    <input type="button" class="btn btn-outline-dark"
+                           value="تعديل العنوان"
+                           onclick="location.href='@Url.Action("EditAddress", "Account", null)'" />
+                </p>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<br/>

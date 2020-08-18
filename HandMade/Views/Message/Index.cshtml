@@ -1,0 +1,102 @@
+﻿@model HandMade.Models.MessageScreen
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@Model.Content</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+
+    <div class="row" style="position:absolute; top:45%; left:10%; right:10%;">
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-4 containInCon" style="padding:20px 20px 3px 20px; border-radius:10px;">
+            <p style="text-align:center;">
+                @if (Model.Typr == "true")
+                {
+                    <img src="~/Content/imgs/true.png" width="30" alt="ASP.NET" class="img-responsive" />
+                }
+                else if (Model.Typr == "false")
+                {
+                    <img src="~/Content/imgs/error.png" width="30" alt="ASP.NET" class="img-responsive" />
+                }
+                else
+                {
+                    <img src="~/Content/imgs/info.png" width="30" alt="ASP.NET" class="img-responsive" />
+
+                }
+                &nbsp; @Model.Content
+            </p>
+        </div>
+        <div class="col-md-4">
+
+        </div>
+
+        @{
+            if ((Model.Action != "" && Model.Control != "") || (Model.Action != null && Model.Control != null))
+            {
+                <meta http-equiv="refresh" content="3; url='@Url.Action(Model.Action, Model.Control,null)'" />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-md-4">
+
+                    </div>
+                    <div class="col-md-4">
+
+                        <div id="CountDown" style="margin-top: 80%; text-align:center">
+                            <h6 style="text-align:center;">جاري إعادة توجيهك تلقيائيا </h6>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+
+                    </div>
+                </div>
+            }
+            else
+            {
+                <meta http-equiv="refresh" content="3; url='@Url.Action("Index", "Home", null)'" />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-md-4">
+
+                    </div>
+                    <div class="col-md-4">
+
+                        <div id="CountDown" style="margin-top: 80%; text-align:center">
+                            <h6 style="text-align:center;">جاري إعادة توجيهك تلقيائيا </h6>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+
+                    </div>
+                </div>
+            }
+        }
+
+
+
+    </div>
+   
+</body>
+</html>

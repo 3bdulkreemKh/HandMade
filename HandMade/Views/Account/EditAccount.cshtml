@@ -1,0 +1,68 @@
+﻿@model HandMade.Models.ViewModel.SignUp
+
+@{
+    ViewBag.Title = "تسجيل حساب جديد ";
+}
+
+<div style="margin:auto;">
+    <div class="containe">
+        <br />
+        <div class="containInCon">
+            <h3 style="margin:10px 0;">تعديل البيانات الشخصية</h3>
+            <br />
+            <h6>تعديل البيانات</h6>
+            <hr />
+            @using (Html.BeginForm("EditAccount", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+
+                
+                @Html.HiddenFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "البريد الإلكتروني" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-error" })
+                <div style="height:15px;"></div>
+                <div style="transform:translateY(10px)"><p><span style="color:red">*&nbsp;</span>الإسم الشخصي (إسم المتجر في حال كنت بائع)</p></div>
+                @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control", @placeholder = "(الإسم الشخصي (إسم المتجر في حال كنت بائع" } })
+                @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-error" })
+                <div style="height:15px;"></div>
+                <div style="transform:translateY(10px)"><p><span style="color:red">*&nbsp;</span>رقم الجوال</p></div>
+                @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "رقم الجوال" } })
+                @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-error" })
+
+                @Html.HiddenFor(model => model.UserName, new { @value=Model.Email, @class = "form-control", @placeholder = "كلمة المرور" })
+                @Html.HiddenFor(model => model.Role, new { @class = "form-control", @placeholder = "كلمة المرور" })
+                @Html.HiddenFor(model => model.Password, new { @class = "form-control", @placeholder = "كلمة المرور" })
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-error" })
+                <div style="height:15px;"></div>
+                <hr />
+                <label for="ImageFile" id="import" style="background:none; color:rebeccapurple" type="file">+ تغيير صورة شخصية</label>
+                <br />
+                <span id="selected_filename">لم يتم إختيار صورة للملف</span>
+                <input id="browser" name="ImageFile" class="hideMe" type="file" />
+                <hr />
+                if (Model.Error != null)
+                {
+                    <p style="color:red; font-size:12px;">@Model.Error</p>
+                }
+                <input type="submit" class="btn btnPrimaryOutline" value="حفظ" style="width:100%" />
+            }
+            <br />
+            <br />
+
+        </div>
+        <script>
+                $("#import").click(function () {
+                    $("#browser").trigger("click");
+                    $('#browser').change(function () {
+                        $('#selected_filename').text($('#browser')[0].files[0].name);
+                    });
+                });
+        </script>
+    </div>
+
+    <br />
+    <br />
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

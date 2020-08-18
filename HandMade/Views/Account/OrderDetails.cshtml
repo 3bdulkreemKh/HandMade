@@ -1,0 +1,146 @@
+﻿@model HandMade.Models.Order
+
+<div class="row">
+    <div class="col-7">
+        <h5 class="row">
+            بيانات الطلب رقم @Model.Number &nbsp; <p style="background-color:lightseagreen;">&nbsp; @Model.Status &nbsp;</p>
+        </h5>
+    </div>
+
+    <div class="col-5" style="text-align:left">
+        <p>
+            @Model.OrderDate
+        </p>
+    </div>
+</div>
+
+<hr />
+<div class="row" style="background-color:lightgray; padding-top:10px; padding-bottom:10px; margin-bottom:10px;">
+    <div class="col-4">
+        المنتج
+    </div>
+    <div class="col-3">
+        السعر
+    </div>
+    <div class="col-2">
+        الكمية
+    </div>
+    <div class="col-3">
+        المجموع
+    </div>
+</div>
+@{
+    foreach (var order in Model.OrderLines)
+    {
+        <div class="row">
+            <div class="col-4">
+                <a href="#" onclick="@("window.location.href='" + @Url.Action("Details", "Product", new { productId = order.Product.Id }) + "'");">
+                    @order.Product.Name
+                </a>
+            </div>
+            <div class="col-3">
+                @order.ProductPrice
+            </div>
+            <div class="col-2">
+                @order.Qyt
+            </div>
+            <div class="col-3">
+                @order.TotalPrice
+            </div>
+        </div>
+        <hr />
+    }
+
+
+    <div class="row">
+        <div class="col-7">
+
+        </div>
+        <div class="col-3">
+            مجموع الطلبات
+        </div>
+        <div class="col-2" style="text-align:left">
+            <p>
+                @Model.ProductTotal
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-7">
+
+        </div>
+        <div class="col-3">
+            الشحن
+        </div>
+        <div class="col-2" style="text-align:left">
+            <p>
+                @Model.ServiceTotal
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-7">
+
+        </div>
+        <div class="col-3">
+            الضريبة
+        </div>
+        <div class="col-2" style="text-align:left">
+            <p>
+                @Model.VatTotal
+            </p>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-7">
+
+        </div>
+        <div class="col-3">
+            المجموع الكلي
+        </div>
+        <div class="col-2" style="text-align:left">
+            <p>
+                @Model.Total
+            </p>
+        </div>
+    </div>
+
+    <hr />
+
+
+    if (Model.ShippingNumber != null)
+    {
+        <p>
+            رقم التتبع: @Model.ShippingNumber
+        </p>
+        <p>
+            موقع التتبع: @Model.ShippingCompany
+        </p>
+    }
+    else
+    {
+        <h6>لم يتم شحن طلبك</h6>
+    }
+
+
+    if (Model.Status != "تم الإستلام")
+    {
+        <hr />
+
+        <p style="text-align:center">
+
+            <input type="button" class="btnPrimaryOutline"
+                   value="تأكيد إستلام الطلب"
+                   onclick="location.href='@Url.Action("ConfirmReceived", "Account", new { orderNumber = Model.Number })'" />
+        </p>
+
+
+    }
+    <br />
+    <br />
+}
+
+

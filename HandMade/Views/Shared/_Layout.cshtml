@@ -1,0 +1,307 @@
+﻿
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <br />
+    <div class="row" style="width:50%;margin:auto; text-align:center; ">
+        <p style="text-align:center; width:100%; ">
+            <a href="#" onclick="@("window.location.href='" + @Url.Action("Index", "Home", null) + "'");">
+                <img style="text-align:center; max-width:400px" src="~/Content/imgs/handmade.png"
+                     alt="ASP.NET" />
+            </a>
+        </p>
+
+    </div>
+
+
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            @{
+                    
+                    using (Html.BeginForm("Index", "Product",
+                    null,
+                    FormMethod.Post, new { @class = "form-horizontal", @style = "width:80%; padding:20px" }))
+                    {
+                    <div class="col row" style="transform:translateX(40px)">
+                        <div class="col-9">
+
+                            <div class="form-inline col-12 row" style="margin:0px">
+                                <input name="SearchString" style="padding:20px 15px 20px 55px" type="text" class="form-control col-11" placeholder="قم بإدخال الكلمات الدلالية في هذه الخانة" />
+                                &nbsp;
+                            </div>
+
+                        </div>
+                        <div class="col" style="transform:translateX(155px)">
+
+                            <div class="form-inline col-12 row" style="margin:0px">
+                                <button class="btn btn-default" type="submit" id="addressSearch">
+                                    <img src="~/Content/imgs/search.png"
+                                         style="max-height:25px"
+                                         alt="ASP.NET" class="img-responsive" />
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                }
+            }
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                </ul>
+                <div class="form-inline my-2 my-lg-0">
+                    @{
+                        HandMade.Manager.AuthorizationManagement authorization = new HandMade.Manager.AuthorizationManagement();
+                        string userEmail = authorization.IsUserLogedIn();
+
+                        if (string.IsNullOrEmpty(userEmail))
+                        {<div style="width:300px;">
+                                <input type="button" class="btn btnPrimary" value="تسجيل الدخول" onclick="@("window.location.href='" + @Url.Action("SignIn", "Account") + "'");" />
+
+                                <span>&nbsp; &nbsp;</span>
+                                <input type="button" class="btn btnPrimaryOutline" value="مستخدم جديد" onclick="@("window.location.href='" + @Url.Action("SignUp", "Account") + "'");" />
+
+                            </div>
+                        }
+                        else if (!string.IsNullOrEmpty(userEmail))
+                        {
+                            HandMade.Models.HandMadeContext context = new HandMade.Models.HandMadeContext();
+                            HandMade.Models.Account account = context.Accounts.FirstOrDefault(a => a.Email == userEmail);
+
+                            if (account != null)
+                            {
+
+                                if (account.Role == "Buyer")
+                                {
+                                    <a href="#" onclick="@("window.location.href='" + @Url.Action("Index", "ShoppingCart") + "'");">
+                                        <img src="~/Content/imgs/shopping-cart.png" style="max-height:30px; max-width:30px; width:auto; height:auto" alt="ASP.NET" class="img-responsive" />
+                                    </a>
+                                }
+
+                                <div style="width:10px;"></div>
+                                <div class="nav-item dropdown">
+                                    <a class="nav-link dropdown" style="transform:translateY(3px)" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+                                        <i class="circleImg">
+                                            <img src="~/ProfilePicture/@account.ImagePath" style="max-height:35px; max-width:35px; width:auto; height:auto" alt="ASP.NET" class="img-responsive" />
+                                        </i>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="#" onclick="@("window.location.href='" + @Url.Action("Index", "Account") + "'");">
+                                            معلومات الحساب
+                                        </a>
+                                        @if (account.Role == "Buyer")
+                                        {
+                                            <a class="dropdown-item" href="#" onclick="@("window.location.href='" + @Url.Action("MyOrders", "Account") + "'");">
+                                                طلباتي
+                                            </a>
+                                            <a class="dropdown-item" href="#" onclick="@("window.location.href='" + @Url.Action("EditAddress", "Account") + "'");">
+                                                تعديل العنوان
+                                            </a>
+                                        }
+
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" style="color:red" onclick="@("window.location.href='" + @Url.Action("SignOut", "Account") + "'");" href="#">تسجيل الخروج</a>
+                                    </div>
+                                </div>
+
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="container body-content">
+        <br />
+        <br />
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderBody()
+
+        @using System.Globalization;
+
+        <hr />
+        <div class="chatPlace" id="chatPlace">
+
+
+
+        </div>
+
+
+        <script type="text/javascript" language="javascript">
+
+            var seningToId;
+
+
+
+                            var num = 0;
+
+            setInterval(function () {
+
+              var urlVal = '@Url.Action("getChat","Home", null)';
+                $.ajax({
+                    url: urlVal,
+                    type: "GET",
+                    success: function (data) {
+
+
+                        if (data.length > 2) {
+
+                            var senderId = JSON.parse(data)[0].AccountId;
+
+                            var htmlstring = document.getElementById("chatPlace").innerHTML;
+
+  // use the native .trim() if it exists
+  //   otherwise use a regular expression
+htmlstring = (htmlstring.trim) ? htmlstring.trim() : htmlstring.replace(/^\s+/,'');
+
+
+                            if (htmlstring == '') {
+
+                                document.getElementById("chatPlace").innerHTML = document.getElementById("chatPlace").innerHTML + "   <div class='containInCon' id'cont" + senderId + "' style='width:400px; margin: 25px; background-color:white; padding:10px'>" +
+                                     " <div class='row'> " + 
+               " <div class='col'  style='text-align:right'> " +
+                                                                                                                       " <p style='color:black;margin: 0 10px; padding:10px 5px 0px 5px' id='messageHead' class='" + JSON.parse(data)[0].SendToId + "'>" + JSON.parse(data)[0].SendTo +"</p> " +
+
+                "</div> " +
+                "<div class='col' style='text-align:left'>" +
+                    "<p style='text-align:left; margin: 0 10px'>" +
+                        "<button style='background-color:transparent; border:none; color:gray; margin:0; padding: 5px 10px;' id='closeMsg'>X</button>" +
+                    "</p>" +
+                "</div>" +
+           " </div>" +
+                                                                                    "<hr />" +
+                                                                                    "<div style='height:400px; max-height:400px;overflow-y: auto; direction:rtl' id='messageArea" + senderId +"'>" +
+
+                                                                                    "</div>" +
+                                                                                    "<hr />" +
+                                                                                   " <div class='row' style='transform:translateX(-25px); padding:0px 5px 10px 5px'>" +
+                                                                                      "  <input type='text' class='form-control col' id='messageContent" + senderId +"' style='max-width:280px' />" +
+                                                                                        "<div style='width:10px'></div> " +
+                                                                                        "<button class='btn btn-outline-dark col' id='messageButton" + senderId +"' style='max-width:70px'>إرسال</button>" +
+                                                                                   " </div>" +
+
+                                    "</div>";
+
+                                $("#closeMsg").click(function () {
+
+                                    document.getElementById("chatPlace").innerHTML = "";
+
+                                })
+
+                                 $("#messageButton" + senderId).click(function() {
+
+                var urlVal2 = '@Url.Action("postChat","Home", null)';
+
+                if (document.getElementById('messageContent' + senderId).value != "") {
+
+                    var msgValue =  document.getElementById('messageContent' + senderId).value;
+                                                                         document.getElementById('messageContent' + senderId ).value = "";
+
+                    if (msgValue != "") {
+
+                           var settings = {
+                                "url": urlVal2,
+                                "method": "POST",
+                                "timeout": 0,
+                                "headers": {
+                                    "Content-Type": "application/json"
+                                },
+                                "data": JSON.stringify({ "SendToId": senderId, "Message": msgValue }),
+                            };
+
+                            $.ajax(settings).done(function (response) {
+
+
+                                 document.getElementById("messageArea" + senderId).innerHTML = document.getElementById("messageArea" + senderId).innerHTML +
+                        "<div style='text-align:right; margin:0 10px'> " +
+                        "<p style='margin-bottom:0; color:gray; text-decoration:wavy; font-size:12px'>" + '@DateTime.Now.ToString("tt hh:mm", CultureInfo.InvariantCulture)' + "</p>" +
+                        "<p style='margin-top:2px;display: inline-block;padding:5px 10px; border-radius: 10px 0px 0px 10px; max-width:270px; border:solid 1px mediumpurple; color:mediumpurple'> " +
+                        msgValue +
+                        "</p> </div>";
+
+                                $("#messageArea" + senderId).scrollTop($("#messageArea" + senderId)[0].scrollHeight);
+
+
+
+                            });;
+                    }
+
+                }
+
+
+            });
+
+                                num = 1;
+                            }
+
+
+                              $.each(JSON.parse(data), function (i, item) {
+
+                                                              seningToId = item.AccountId;
+
+                            document.getElementById("messageArea" + senderId).innerHTML = document.getElementById("messageArea" + senderId).innerHTML +
+                                "<div style='text-align:left; margin:0 10px'> " +
+                                "<p style='margin-bottom:0; color:gray; text-decoration:wavy; font-size:12px'>" + item.Time + "</p>" +
+                                "<p style='margin-top:2px;display: inline-block;padding:5px 10px; border-radius: 0px 10px 10px 0px; max-width:270px; background-color:mediumpurple; color:white;'> " +
+                                item.Message +
+                                "</p> </div>";
+
+                            $("#messageArea" + senderId).scrollTop($("#messageArea" + senderId)[0].scrollHeight);
+
+                                  seningToId = item.AccountId;
+
+                                  var urlVal3 = '@Url.Action("readChat","Home", null)';
+                                                              urlVal3 = urlVal3.replace("readChat", "readChat/" + item.Id);
+
+var settings = {
+  "url": urlVal3,
+  "method": "POST",
+  "timeout": 0,
+  "headers": {
+    "Content-Type": "application/json"
+  },
+};
+
+$.ajax(settings).done(function (response) {
+  console.log(response);
+});
+
+                        });
+                        }
+
+                    }
+                });
+
+
+            }, 3000);
+
+
+
+        </script>
+
+
+
+
+        @RenderSection("scripts", required: false)
+
+
+
+
+        <footer>
+            <p>  جميع الحقوق محفوظة صنع يدك &copy; @DateTime.Now.Year </p>
+        </footer>
+    </div>
+
+
+</body>
+</html>

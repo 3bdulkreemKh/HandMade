@@ -1,0 +1,249 @@
+﻿@model HandMade.Models.Order
+
+@{ 
+    HandMade.Models.Address address = (new HandMade.Models.HandMadeContext()).Addresses.FirstOrDefault(a => a.AccountId == Model.AccountId);
+}
+
+<div class="row">
+    <div class="col-7">
+        <h5 class="row" style="background-color:white; padding: 5px">
+            بيانات الطلب رقم @Model.Number &nbsp; <p style="background-color:lightseagreen;">&nbsp; @Model.Status &nbsp;</p>
+        </h5>
+    </div>
+
+    <div class="col-5" style="text-align:left">
+        <p>
+            @Model.OrderDate
+        </p>
+    </div>
+</div>
+
+<hr />
+<br/>
+<div class="row">
+    <div class="col-4">
+        <div class=" containInCon" style="padding:25px; margin:0 10px; border-radius:10px" ">
+            بيانات صاحب الطلب
+            <hr />
+            <div class="row" style="display:none">
+                <div class="col-auto">
+                    <img src="~/Content/imgs/user.png"
+                         style="max-height:25px"
+                         alt="ASP.NET" class="img-responsive" />
+                </div>
+                <div class="col">
+                    @Model.Account.PhoneNumber
+                </div>
+            </div>
+            <br />
+            <div class="row" style="margin-top:-10px">
+                <div class="col-auto">
+                    <img src="~/Content/imgs/user.png"
+                         style="max-height:25px"
+                         alt="ASP.NET" class="img-responsive" />
+                </div>
+                <div class="col">
+                    @Model.Account.FullName
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-auto">
+                    <img src="~/Content/imgs/call.png"
+                         style="max-height:25px"
+                         alt="ASP.NET" class="img-responsive" />
+                </div>
+                <div class="col">
+                    @Model.Account.PhoneNumber
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-auto">
+                    <img src="~/Content/imgs/mail.png"
+                         style="max-height:25px"
+                         alt="ASP.NET" class="img-responsive" />
+                </div>
+                <div class="col">
+                    @Model.Account.Email
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-auto">
+                    <img src="~/Content/imgs/home.png"
+                         style="max-height:25px"
+                         alt="ASP.NET" class="img-responsive" />
+                </div>
+                <div class="col">
+                    @address.City , @address.Provice
+                </div>
+            </div>
+            <br />
+            <br />
+
+            تفاصيل العنوان:
+            <hr />
+            @address.AddressDtails
+        </div>
+        
+    </div>
+    <div class="col-8">
+        <div class="row" style="background-color:lightgray; padding-top:10px; padding-bottom:10px; margin-bottom:10px;">
+            <div class="col-4">
+                المنتج
+            </div>
+            <div class="col-3">
+                السعر
+            </div>
+            <div class="col-2">
+                الكمية
+            </div>
+            <div class="col-3">
+                المجموع
+            </div>
+        </div>
+        @{
+            foreach (var order in Model.OrderLines)
+            {
+                <div class="row">
+                    <div class="col-4">
+                        <a href="#" onclick="@("window.location.href='" + @Url.Action("Details", "Product", new { productId = order.Product.Id }) + "'");">
+                            @order.Product.Name
+                        </a>
+                    </div>
+                    <div class="col-3">
+                        @order.ProductPrice
+                    </div>
+                    <div class="col-2">
+                        @order.Qyt
+                    </div>
+                    <div class="col-3">
+                        @order.TotalPrice
+                    </div>
+                </div>
+                <hr />
+            }
+
+
+            <div class="row">
+                <div class="col-7">
+
+                </div>
+                <div class="col-3">
+                    مجموع الطلبات
+                </div>
+                <div class="col-2" style="text-align:left">
+                    <p>
+                        @Model.ProductTotal
+                    </p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-7">
+
+                </div>
+                <div class="col-3">
+                    الشحن
+                </div>
+                <div class="col-2" style="text-align:left">
+                    <p>
+                        @Model.ServiceTotal
+                    </p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-7">
+
+                </div>
+                <div class="col-3">
+                    الضريبة
+                </div>
+                <div class="col-2" style="text-align:left">
+                    <p>
+                        @Model.VatTotal
+                    </p>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-7">
+
+                </div>
+                <div class="col-3">
+                    المجموع الكلي
+                </div>
+                <div class="col-2" style="text-align:left">
+                    <p>
+                        @Model.Total
+                    </p>
+                </div>
+            </div>
+            }
+        </div>
+
+</div>
+
+
+    <hr />
+
+
+    @if (Model.ShippingNumber != null)
+    {
+        <p>
+            رقم التتبع: @Model.ShippingNumber
+        </p>
+        <p>
+            موقع التتبع: @Model.ShippingCompany
+        </p>
+    }
+    else
+    {
+        <h6>لم يتم الطلب</h6>
+    }
+
+
+    @if (Model.Status != "تم الإستلام")
+    {
+        <hr />
+        using (Html.BeginForm())
+        {
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">أدخال بيانات الشخن</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            @Html.EditorFor(model => model.ShippingNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "ادخل رقم تتبع الشحنه" } })
+                            <br />
+                            @Html.EditorFor(model => model.ShippingCompany, new { htmlAttributes = new { @class = "form-control", @placeholder = "أدخل الموقع الخاص بشركة الشحن" } })
+                        </div>
+                        @Html.HiddenFor(m => m.Number)
+
+                        <div class="modal-footer" style="text-align:center">
+                            <button type="button" aria-label="Close" data-dismiss="modal" style="background:none; border: none">تراجع</button>
+                            <input type="submit" class="btnPrimary" style="width:200px"
+                                   value="إرسال" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <p style="text-align:center">
+            <input type="button" class="btnPrimary" style="width:250px" data-toggle="modal" data-target="#exampleModalCenter"
+                   value="أدخال معلومات الشحن" />
+        </p>
+
+
+    
+    <br />
+    <br />
+}
+
+

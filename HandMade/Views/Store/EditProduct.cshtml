@@ -1,0 +1,93 @@
+﻿@model HandMade.Models.ViewModel.AddedProduct
+
+@using HandMade.Models
+
+@{
+    ViewBag.Title = "تعديل بيانات المنتج";
+}
+
+<div style="margin:auto;">
+    <div class="containe">
+        <br />
+        <div class="containInCon" style="width:95%">
+            <h3 style="margin:10px 0;">تعديل بيانات المنتج</h3>
+            <br />
+            <h6>قم بإدخال البيانات في الحقول لتعديل بيانات المنتجد</h6>
+            <hr />
+            @using (Html.BeginForm("EditProduct", "Store", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                HandMadeContext context = new HandMadeContext();
+                ICollection<Category> categoryList = context.Categories.Include("SubCategories").ToList();
+                ICollection<SubCategory> subCategoryList = context.SubCategories.ToList();
+
+                <div style="height:10px;"></div>
+                <div style="transform:translateY(10px)"><p><span style="color:red">*&nbsp;</span>إسم المنتج</p></div>
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @placeholder = "أسم المنتج" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-error" })
+                <div style="transform:translateY(10px)"><p><span style="color:red">*&nbsp;</span>وصف مختصر للمنتج</p></div>
+                @Html.EditorFor(model => model.SmallDisc, new { htmlAttributes = new { @class = "form-control", @placeholder = "وصف مختصر للمنتج" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-error" })
+                <div style="height:15px;"></div>
+                <div style="transform:translateY(10px)"><p><span style="color:red">*&nbsp;</span>الكمية في المخزن</p></div>
+                @Html.EditorFor(model => model.Stock, new { htmlAttributes = new { @class = "form-control", @placeholder = "العدد المتاح" } })
+                @Html.ValidationMessageFor(model => model.Stock, "", new { @class = "text-error" })
+                <div style="height:15px;"></div>
+                <div style="transform:translateY(10px)"><p><span style="color:red">*&nbsp;</span>السعر بالريال السعودي</p></div>
+                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control", @placeholder = "السعر" } })
+                @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-error" })
+                <div style="height:15px;"></div>
+                <div style="transform:translateY(10px)"><p><span style="color:red">*&nbsp;</span>نسبة التخفيض إن وجد %</p></div>
+                @Html.EditorFor(model => model.DiscountPercentage, new { htmlAttributes = new { @class = "form-control", @placeholder = "نسبة التخفيض" } })
+                @Html.ValidationMessageFor(model => model.DiscountPercentage, "", new { @class = "text-error" })
+                <div style="height:15px;"></div>
+                <div style="transform:translateY(10px)"><p><span style="color:red">*&nbsp;</span>صنف المنتج</p></div>
+                @Html.DropDownList("صنف المنتج", new SelectList(categoryList, "Id", "CategoryName"), "صنف المنتج", new { @class = "form-control", @Id = "categoryDropDown" })
+                <div style="height:15px;"></div>
+                <div style="transform:translateY(10px)"><p><span style="color:red">*&nbsp;</span>نوع الصنف</p></div>
+                @Html.DropDownListFor(model => model.SubCategoryId, new SelectList(subCategoryList, "Id", "SubCategoryName"), "نوع الصنف", new { @class = "form-control", @Id = "subCategoryDropDown" })
+                <div style="height:15px;"></div>
+                <div style="transform:translateY(10px)"><p><span style="color:red">*&nbsp;</span>وصف المنتج</p></div>
+                @Html.TextAreaFor(model => model.Discription, new { @class = "form-control", @placeholder = "وصف المنتج" })
+                @Html.ValidationMessageFor(model => model.Discription, "", new { @class = "text-error" })
+                <hr />
+                if (Model.Error != null)
+                {
+                    <p style="color:red; font-size:12px;">@Model.Error</p>
+                }
+                @Html.HiddenFor(model => model.Id)
+                <input type="submit" class="btn btnPrimaryOutline" value="حفظ" style="width:100%" />
+            }
+            <br />
+        </div>
+
+    </div>
+
+    <br />
+    <br />
+</div>
+
+<script>
+    $(function () {
+        $("#categoryDropDown").on("change", function () {
+            var categoryId = $(this).val();
+            $("#subCategoryDropDown").empty();
+            $("#subCategoryDropDown").append("<option value=''>نوع الصنف</option>");
+            var urlVal = '@Url.Action("getSubCategory","Store", new { catId = "-1"})';
+            urlVal = urlVal.replace("-1", categoryId);
+
+            $.ajax({
+                url : urlVal,
+                type: "GET",
+                success: function (data) {
+                    $.each(JSON.parse(data), function (i, item) {
+                        $("#subCategoryDropDown").append($('<option></option>').attr('value', item.Id).text(item.SubCategoryName));
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

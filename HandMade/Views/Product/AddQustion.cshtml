@@ -1,0 +1,35 @@
+﻿@model HandMade.Models.Question
+
+@{
+    ViewBag.Title = "أظافة سؤال";
+}
+
+@using (Html.BeginForm())
+{
+    <div class='rating-stars text-center'>
+        <div class="row">
+            <div class="col-md-4">
+
+            </div>
+            <div class="col-md-4">
+                <h3>ضع سؤالك عن المنتج</h3>
+                <br />
+                <div class="containInCon">                    
+                    @Html.HiddenFor(m => m.Id)
+                    @Html.HiddenFor(m => m.ProductId)
+                    @Html.HiddenFor(m => m.AccountId)
+                    @Html.TextAreaFor(model => model.Content, new { @class = "form-control", @style = "min-height: 200px;", @placeholder = "إكتب وصف السؤال في هذه الخانة" })
+                    @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-error" })
+                    <br />
+                    <input type="submit" class="btn btnPrimary" value="إرسل السؤال" style="width:100%" />
+                </div>
+            </div>
+            <div class="col-md-4">
+
+            </div>
+        </div>
+
+
+    </div>
+}
+

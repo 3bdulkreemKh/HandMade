@@ -1,0 +1,103 @@
+﻿@model HandMade.Models.ShippingCost
+@using HandMade.Models
+
+@{
+    ViewBag.Title = "إظافة تسعيرة الشحن";
+}
+
+<div style="margin:auto;">
+    <div class="containe">
+        <br />
+        <div class="containInCon" style="width:95%">
+            <h3 style="margin:10px 0;">تعديل تسعيرة الشحن</h3>
+            <br />
+            <hr />
+            @using (Html.BeginForm())
+            {
+                HandMadeContext context = new HandMadeContext();
+                ICollection<Region> regionList = context.Regions.Include("Cities").ToList();
+                ICollection<City> cityCategoryList = context.Cities.ToList();
+
+                <div style="height:10px;"></div>
+                <div><p><span style="color:red">*&nbsp;</span>العنوان (عنوان إرسال المنتجات)</p></div>
+
+                @Html.DropDownList("المنطقة", new SelectList(regionList, "Id", "RegionName"), "المنطقة", new { @class = "form-control", @Id = "categoryDropDown" })
+                <div style="height:15px;"></div>
+                <div style="transform:translateY(10px)"><p><span style="color:red">*&nbsp;</span>المدينة</p></div>
+                @Html.DropDownListFor(model => model.City, new SelectList(cityCategoryList, "CityName", "CityName"), "المدينة", new { @class = "form-control", @Id = "subCategoryDropDown" })
+                @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-error" })
+                <hr />
+                <script>
+                    $(function () {
+                        $("#categoryDropDown").on("change", function () {
+                            var categoryId = $(this).val();
+                            $("#subCategoryDropDown").empty();
+                            $("#subCategoryDropDown").append("<option value=''>إختار المدينة</option>");
+                            var urlVal = '@Url.Action("getRegion","Product", new { regionId = "-1"})';
+                            urlVal = urlVal.replace("-1", categoryId);
+
+                            $.ajax({
+                                url : urlVal,
+                                type: "GET",
+                                success: function (data) {
+                                    $.each(JSON.parse(data), function (i, item) {
+                                        $("#subCategoryDropDown").append($('<option></option>').attr('value', item.CityName).text(item.CityName));
+                                    });
+                                }
+                            });
+                        });
+                    });
+                </script>
+                <div style="">
+                    <p>
+                        @Html.CheckBoxFor(model => model.IsInPerson, new { htmlAttributes = new { @class = "form-control", value = "true" } }) تسليم الشحنة من موقع البائع
+                    </p>
+                </div>
+                <hr />
+                <div style="transform:translateY(10px)">
+                    <p>
+
+                        @Html.CheckBoxFor(model => model.IsInCityShipping, new { htmlAttributes = new { @class = "form-control", value = "true" } }) شحن داخل المدينة
+                    </p>
+                </div>
+                <div class="row">
+                    <div class="col-7">
+                        @Html.EditorFor(model => model.InCityCost, new { htmlAttributes = new { @class = "form-control", @placeholder = "قيمة الشحن لداخل المدينة" } })
+
+                    </div>
+                    <div class="col-4">
+                        ريال سعودي
+                    </div>
+                </div>
+                @Html.ValidationMessageFor(model => model.InCityCost, "", new { @class = "text-error" })
+                <hr />
+                <div style="transform:translateY(10px)">
+                    <p>
+
+                        @Html.CheckBoxFor(model => model.IsOutCityShipping, new { htmlAttributes = new { @class = "form-control", value = "true" } }) شحن حارج المدينة
+                    </p>
+                </div>
+                <div class="row">
+                    <div class="col-7">
+                        @Html.EditorFor(model => model.OutCityCost, new { htmlAttributes = new { @class = "form-control", @placeholder = "قيمة الشحن لداخل المدينة" } })
+
+                    </div>
+                    <div class="col-4">
+                        ريال سعودي
+                    </div>
+                </div>
+                @Html.ValidationMessageFor(model => model.OutCityCost, "", new { @class = "text-error" })
+                <hr />
+
+                @Html.HiddenFor(m => m.AccountId)
+                @Html.HiddenFor(m => m.Id)
+                <input type="submit" class="btn btnPrimaryOutline" value="حفظ" style="width:100%" />
+            }
+            <br />
+        </div>
+
+    </div>
+
+    <br />
+    <br />
+</div>
